@@ -1,0 +1,19 @@
+h1. TODO
+
+h2. Modules:
+
+ * Afficheur (ui) : affichage, prompt, lecture, ...
+ * Parseur (d'instruction) : anaylse chaque chaine passé depuis le prompt
+ * Exporteur : pour gérer l'exportation dans un fichier
+ * Interpreteur : gère l'interpréteur du programme en utilisant afficheur, parseur et exporteur.
+ * ...
+
+h2. Structures :
+
+ * Point : un point boolean
+ * Points : un ensemble de points (-> liste chainée)
+ * Function : une fonction (un nom de symbole, une représentation)
+ * BoolTree : un arbre booléen : représentation possible d'une fonction (-> pointeur sur BoolNode)
+ * BoolNode : un noeud booléen
+ * TruthTable : table de vérité : représentation possible d'une fonction
+ * Functions : liste des symboles/fonctions définies
