@@ -12,8 +12,33 @@ h2. Structures :
 
  * Point : un point boolean
  * Points : un ensemble de points (-> liste chainée)
- * Function : une fonction (un nom de symbole, une représentation)
+ * Function : une fonction (un nom de symbole + une représentation + ...)
  * BoolTree : un arbre booléen : représentation possible d'une fonction (-> pointeur sur BoolNode)
- * BoolNode : un noeud booléen
+ * BoolNode : un noeud de l'arbre booléen
  * TruthTable : table de vérité : représentation possible d'une fonction
  * Functions : liste des symboles/fonctions définies
+
+h2. Fonctionnalités : instructions de l'interpréteur
+
+ * expr f_id = "expression-logique"
+ * table f_id = (0,...,0)    # table de vérité
+ * print /e [fichier] # expression logique
+ * print /d [fichier] # forme disjonctive
+ * print /k [fichier] # tableau de karnaugh
+ * print /t [fichier] # table de vérité
+ * print /a [fichier] # arbre sous format dot
+ * print /b [fichier] # bdd format dot
+ * point p_id = (0,1,0,....,0)
+ * point p_id += (0,1,1,....,0)
+ * point p_id -= (0,1,1,....,0)
+ * eval f_id p_id
+ * eval f_id (0,0,...,0)
+ 
+ h3. Fonctionnalités supplémentaires (bonus)
+ 
+ * simplifier une fonction
+ * mettre une fonction sous FND
+ * simplifier une fonction sur un ensemble de points valides
+ * créer un BDD
+ * comparaison de 3 expressions
+ * pouvoir créer une fonction avec des appels à d'autre (voir le cours de logique / substitution)
