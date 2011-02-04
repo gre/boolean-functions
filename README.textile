@@ -1,4 +1,8 @@
-h1. TODO
+This is a commandline interpreter for boolean functions. It's an university project written in C.
+
+Gaetan Renaudeau et Nicolae Namolovan - 2011 - All right reserved, until the end of the project.
+
+h1. TODO list
 
 h2. Modules:
 
@@ -34,7 +38,7 @@ h2. Fonctionnalités : instructions de l'interpréteur
  * eval f_id p_id
  * eval f_id (0,0,...,0)
  
- h3. Fonctionnalités supplémentaires (bonus)
+h3. Fonctionnalités supplémentaires (bonus)
  
  * simplifier une fonction
  * mettre une fonction sous FND
