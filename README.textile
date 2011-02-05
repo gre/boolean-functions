@@ -44,5 +44,5 @@ h3. Fonctionnalités supplémentaires (bonus)
  * mettre une fonction sous FND
  * simplifier une fonction sur un ensemble de points valides
  * créer un BDD
- * comparaison de 3 expressions
+ * comparaison de 2 expressions
  * pouvoir créer une fonction avec des appels à d'autre (voir le cours de logique / substitution)

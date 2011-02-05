@@ -10,4 +10,10 @@ struct _TruthTable {
 
 typedef struct _TruthTable TruthTable;
 
+int btable_equals(TruthTable, TruthTable);
+
+TruthTable btable_parse(char*);
+void btable_print(TruthTable);
+void btable_printKarnaugh(TruthTable);
+
 #endif
