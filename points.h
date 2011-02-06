@@ -15,6 +15,8 @@ void points_free(Points* set);
 
 int points_contains(Points* set, Point p);
 
+char* points_getSymbol(Points*); // Get the name identifier of the points
+
 /**
  * Return the dim of points or 0 if not constraints (no points)
  */
@@ -47,3 +49,4 @@ int points_getSize(Points* set);
 Point* points_toArray(Points* set, int* size);
 
 #endif
+

@@ -5,7 +5,7 @@
 
 struct _TruthTable {
   int size;
-  bool* tab;
+  Bool* tab;
 };
 
 typedef struct _TruthTable TruthTable;
@@ -17,3 +17,4 @@ void btable_print(TruthTable);
 void btable_printKarnaugh(TruthTable);
 
 #endif
+

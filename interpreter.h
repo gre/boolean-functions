@@ -1,9 +1,9 @@
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
-#include "globals.h"
 #include "function.h"
 #include "points.h"
+#include "globals.h"
 
 struct _Env {
   // ...
@@ -29,3 +29,4 @@ void interp_start(Env*);
 void interp_stop(Env*);
 
 #endif
+

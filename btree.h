@@ -1,6 +1,7 @@
 #ifndef _BTREE_H
 #define _BTREE_H
 
+#include "btable.h"
 #include "globals.h"
 
 typedef enum {
@@ -28,3 +29,4 @@ TruthTable btree_toTruthTable(BoolTree*);
 void btree_printDot(BoolTree*);
 
 #endif
+

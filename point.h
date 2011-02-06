@@ -1,17 +1,19 @@
-#ifndef _POINTS_H
-#define _POINTS_H
+#ifndef _POINT_H
+#define _POINT_H
 
 #include "globals.h"
 
 typedef struct _Point {
-  bool* vect;
+  Bool* vect;
   int dim;
 } Point;
 
-Point point_create(bool*, int);
+Point point_create(Bool*, int);
 
 int point_equals(Point, Point);
 
 void point_print(Point);
 
 #endif
+
+

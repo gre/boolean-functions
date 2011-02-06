@@ -1,8 +1,9 @@
 #ifndef _FUNCTION_H
 #define _FUNCTION_H
 
-#include "globals.h"
+#include "point.h"
 #include "btree.h"
+#include "globals.h"
 
 struct _Function {
   BoolTree* tree; // the DNF representation of the function : generated on create
@@ -47,7 +48,8 @@ void function_printAsTruthTable(Function); // Must use btable_print
 
 void function_printAsKarnaugh(Function); // Must use btable_printKarnaugh
 
-bool function_eval(Function, Point);
+Bool function_eval(Function, Point);
 
 
 #endif
+
