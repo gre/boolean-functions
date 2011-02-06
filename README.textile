@@ -20,7 +20,6 @@ h2. Structures :
  * BoolTree : un arbre booléen : représentation possible d'une fonction (-> pointeur sur BoolNode)
  * BoolNode : un noeud de l'arbre booléen
  * TruthTable : table de vérité : représentation possible d'une fonction
- * Functions : liste des symboles/fonctions définies
 
 h2. Fonctionnalités : instructions de l'interpréteur
 
