@@ -17,6 +17,7 @@ h2. Structures :
  * Point : un point boolean
  * Points : un ensemble de points (-> liste chainée)
  * Function : une fonction (un nom de symbole + une représentation + ...)
+ * FunctionTree : un arbre de la fonction (avec les opérateurs, variables et constantes)
  * BoolTree : un arbre booléen : représentation possible d'une fonction (-> pointeur sur BoolNode)
  * BoolNode : un noeud de l'arbre booléen
  * TruthTable : table de vérité : représentation possible d'une fonction

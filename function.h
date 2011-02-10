@@ -6,7 +6,8 @@
 #include "globals.h"
 
 struct _Function {
-  BoolTree* tree; // the DNF representation of the function : generated on create
+  FunctionNode* tree;
+  BoolTree* btree; // the DNF representation of the function : generated on create
   TruthTable* table; // the truth table representation of the function
   char* expr; // Origin expression if Function has been defined as expression, generated else
   char* symbol;
