@@ -6,7 +6,7 @@
 
 /**
  * + Global parser functions
- * + All parser utils (Used by function_parse, points_parse , ...)
+ * + All parser utils (Used by function_parse, points_parse , ...) //FIXME: or do we need all parse functions here ?
  */
 
 typedef struct _Command {
@@ -20,8 +20,13 @@ typedef struct _Command {
 } Command;
 
 
-Command parser_parseCommand(char*);
+Command* parser_parseCommand(char*);
+void parser_freeCommand(Command*);
 
+/**
+ * return true if the cmd->command == name
+ */
+int parser_commandIs(Command* cmd, const char* name);
 
 #endif
 

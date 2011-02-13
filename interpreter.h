@@ -3,6 +3,7 @@
 
 #include "function.h"
 #include "points.h"
+#include "parser.h"
 #include "globals.h"
 
 struct _Env {
@@ -23,10 +24,13 @@ void interp_free(Env*);
 
 int interp_containsSymbol(Env*, char*);
 
-void interp_runCommand(Env*, char*);
-
-void interp_start(Env*);
-void interp_stop(Env*);
+/*
+ * return 
+    0 :  if everything is ok with the command
+    1 :  if the command is to quit
+    -1 :  if parse problem
+ */
+int interp_runCommand(Env* env, char* line);
 
 #endif
 
