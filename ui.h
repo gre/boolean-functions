@@ -1,7 +1,6 @@
 #ifndef _UI_H
 #define _UI_H
-
-#define LINE_MAX_LENGTH 1000
+#include "stdio.h"
 
 #define ui_print printf
 

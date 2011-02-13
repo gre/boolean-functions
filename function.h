@@ -2,11 +2,12 @@
 #define _FUNCTION_H
 
 #include "point.h"
+#include "ftree.h"
 #include "btree.h"
 #include "globals.h"
 
 struct _Function {
-  FunctionNode* tree;
+  FunctionTree* tree;
   BoolTree* btree; // the DNF representation of the function : generated on create
   TruthTable* table; // the truth table representation of the function
   char* expr; // Origin expression if Function has been defined as expression, generated else

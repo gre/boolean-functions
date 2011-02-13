@@ -1,10 +1,11 @@
+#include "globals.h"
 #include "ui.h"
 
-char buf[LINE_MAX_LENGTH+1];
+char buf[1000];
 
 char* ui_waitCommand() {
   ui_print("$ ");
-  scanf("%"LINE_MAX_LENGTH"s", buf);
+  scanf("%999s", buf);
   return buf;
 }
 

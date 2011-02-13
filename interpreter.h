@@ -6,16 +6,6 @@
 #include "parser.h"
 #include "globals.h"
 
-struct _Env {
-  // ...
-  
-  // Symbols
-  Function* functions;
-  int nbfunction;
-  
-  Points* points;
-  int nbpoints;
-};
 
 typedef struct _Env Env;
 
