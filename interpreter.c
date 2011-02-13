@@ -21,5 +21,9 @@ void interp_free(Env* env) {
 }
 
 int interp_runCommand(Env* env, char* line) {
-  return 0;
+  int ret = 0;
+  Command* cmd = parser_parseCommand(line);  
+  if(parser_commandIs(cmd, "quit")) ret = 1;
+  parser_freeCommand(cmd);
+  return ret;
 }
