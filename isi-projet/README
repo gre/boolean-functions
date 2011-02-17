@@ -1,0 +1,13 @@
+L'acces au parser est decrit dans parser.h
+
+Les sources du parser sont les 3 fichiers:
+   parser.y parser.h parser.l
+
+L'objet parser a linker avec votre application est parser.tab.o
+La premiere regle du Makefile indique comment l'obtenir.
+
+Un exemple d'utilisation du parser est donne dans le
+fichier parser-test.c.
+L'executable de cet exemple est obtenu par
+   make parser-test
+
