@@ -10,7 +10,6 @@ struct _Function {
   FunctionTree* tree;
   BoolTree* btree; // the DNF representation of the function : generated on create
   TruthTable* table; // the truth table representation of the function
-  char* expr; // Origin expression if Function has been defined as expression, generated else
   char* symbol;
 };
 
@@ -19,15 +18,8 @@ typedef struct _Function Function;
 Function* function_init(); // useless ?
 
 /**
- * Find the format (table? expr?) and init the function
- * generate all fields
- */
-Function* function_parse(char*); 
-
-/**
  * Print as expression :
- * if function has been defined as expression: print it,
- * else, print the DNF
+ * print the DNF
  */
 void function_print(Function *);
 

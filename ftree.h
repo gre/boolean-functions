@@ -9,12 +9,12 @@
 #include "globals.h"
 
 typedef enum {
-  VALUE, VARIABLE, OPERATOR
+  NodeType_VALUE, NodeType_VARIABLE, NodeType_OPERATOR
 } NodeType;
 
 typedef enum { // FIXME : don't remember all op required by specs
-  OR, AND, XOR,
-  NOT // FIXME : using only left child ?
+  Op_OR, Op_AND, Op_XOR,
+  Op_NOT 
 } Operator;
 
 typedef struct _FunctionTree FunctionTree;

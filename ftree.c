@@ -18,6 +18,38 @@ typedef struct _FunctionNode {
 
 struct _FunctionTree {
   FunctionNode* root;
+}
+
+FunctionTree* createWithNode(FunctionNode* node) {
+    FunctionTree* tree = malloc(sizeof(*tree));
+    tree -> root = node;
+}
+
+FunctionNode* ftree_newVar(char s) {
+    FunctionNode* node = malloc(sizeof(*node));
+    node -> type = NodeType_VARIABLE;
+    node -> val = (int)s; 
+    node -> left = 0;
+    node -> right = 0;
+    return node;
+};
+
+FunctionNode* ftree_newBool(int b) {
+    FunctionNode* node = malloc(sizeof(*node));
+    node -> type = NodeType_VALUE;
+    node -> val = (int) b; 
+    node -> left = 0;
+    node -> right = 0;
+    return node;
+};
+
+FunctionNode* ftree_newNot(FunctionNode* node) {
+    FunctionNode* node = malloc(sizeof(*node));
+    node -> type = NodeType_OPERATOR;
+    node -> val = Op_NOT; 
+    node -> left = node;
+    node -> right = 0;
+    return node;
 };
 
 
@@ -36,3 +68,18 @@ char * ftree_toString(FunctionNode* tree) {
     //return (char) 
   }
 }
+
+FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r) {
+    FunctionNode* node = malloc(sizeof(*node));
+    node -> type = NodeType_OPERATOR;
+    switch(o) {
+        case '+': node -> val = Op_OR; break;
+        case '*': node -> val = Op_AND; break;
+        case '^': node -> val = Op_XOR; break;
+    }
+    node -> left = l;
+    node -> right = r;
+    return node;
+
+};
+
