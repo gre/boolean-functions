@@ -6,8 +6,11 @@
 
 int main(int argc, char* argv[]) {
   Env* env = interp_init();
+  TPA_Instruction instruction;
   ui_onStart();
-  while(interp_runCommand(env, ui_waitCommand()) != 1);
+  while(ui_waitCommand(&instruction) != -1) {
+	 interp_runCommand(env, &instruction); 
+  }
   ui_onStop();
   interp_free(env);
   return EXIT_SUCCESS;

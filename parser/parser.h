@@ -1,3 +1,5 @@
+#ifndef _PARSER_H
+#define _PARSER_H
 
 /*******************************************************************/
 /* Le parser construit des expressions logique (instruction expr). */
@@ -97,4 +99,4 @@ typedef struct _TPA_Instruction {
 // renvoie 0 sur fin de fichier.
 int pa_parser(TPA_Instruction* i);
 
-
+#endif

@@ -1,12 +1,11 @@
 #include "globals.h"
 #include "ui.h"
+#include "parser/parser.h"
 
-char buf[1000];
-
-char* ui_waitCommand() {
+int ui_waitCommand(TPA_Instruction* inst) {
   ui_print("$ ");
-  scanf("%999s", buf);
-  return buf;
+  fflush(stdout);
+  return pa_parser(&inst);
 }
 
 void ui_onStart() {

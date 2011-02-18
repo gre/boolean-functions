@@ -3,8 +3,8 @@
 
 #include "function.h"
 #include "points.h"
-#include "parser.h"
 #include "globals.h"
+#include "parser/parser.h"
 
 
 typedef struct _Env Env;
@@ -14,13 +14,7 @@ void interp_free(Env*);
 
 int interp_containsSymbol(Env*, char*);
 
-/*
- * return 
-    0 :  if everything is ok with the command
-    1 :  if the command is to quit
-    -1 :  if parse problem
- */
-int interp_runCommand(Env* env, char* line);
+void interp_runCommand(Env* env, TPA_Instruction* instruction); 
 
 #endif
 
