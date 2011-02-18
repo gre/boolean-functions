@@ -7,7 +7,7 @@ print { return TK_PRINT; }
 point { return TK_POINT; }
 eval  { return TK_EVAL; }
 [a-z] { yylval.numval = *yytext; return TK_VAR; }
-[a-zA-Z][a-zA-Z0_9]*[']* {
+[a-zA-Z][a-zA-Z0-9]*[']* {
         yylval.string = strdup(yytext); return TK_IDENT; }
 \"[^\n]*\" {
         yylval.string = strdup(yytext); return TK_STRING; }
