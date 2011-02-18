@@ -6,13 +6,6 @@
 #include "btree.h"
 #include "globals.h"
 
-struct _Function {
-  FunctionTree* tree;
-  BoolTree* btree; // the DNF representation of the function : generated on create
-  TruthTable* table; // the truth table representation of the function
-  char* symbol;
-};
-
 typedef struct _Function Function;
 
 Function* function_createWithFunctionTree(FunctionTree* tree);
@@ -33,6 +26,9 @@ void function_printAsDNF(Function);
  */
 void function_printAsTree(Function); // Must use btree_print
 
+
+void function_setName(Function* f, char* name);
+
 /**
  * Print binary decision diagram (BDD) in dot format
  */
@@ -44,6 +40,7 @@ void function_printAsKarnaugh(Function); // Must use btable_printKarnaugh
 
 Bool function_eval(Function, Point);
 
+int function_is(Function* f, char* name);
 
 #endif
 

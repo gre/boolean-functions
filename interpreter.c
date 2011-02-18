@@ -12,7 +12,7 @@ struct _Env {
   Function* functions[100]; // TODO dynamic
   int nbfunction;
   
-  Points* points;
+  Points* points[100]; // TODO dynamic
   int nbpoints;
 };
 
@@ -40,18 +40,30 @@ void interp_free(Env* env) {
   free(env);
 }
 
-void addFunction(Env* env, char* name, Function* f) {
+static void addFunction(Env* env, char* name, Function* f) {
+    function_setName(f, name);
     env -> functions[env -> nbfunction ++] = f;
 }
+static void addPoint(Env* env, char* name, Points* p) {
+    // todo : points_setName
+    env -> points[env -> nbpoints ++] = p;
+}
 
+Function* interp_getFunctionByName(Env* env, char* name) {
+  int i;
+  for(i=0; i<env->nbfunction; ++i)
+    if(function_is(env->functions[i], name))
+      return env->functions[i];
+  return 0;
+}
 
 static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr) {
     if(expr==0 || expr->type==TPA_UNDEF) return 0;
     if(expr->type==TPA_VALUE) return ftree_newBool(expr->val==1);
     if(expr->type==TPA_VARIABLE) return ftree_newVar((char)expr->val);
     if(expr->type==TPA_OPERATOR) {
-			return (expr->val=='!') ? ftree_newNot(TPAExpr_toFunctionNode(expr->left))
-			: ftree_newBin(TPAExpr_toFunctionNode(expr->left), expr->val, TPAExpr_toFunctionNode(expr->right));
+      return (expr->val=='!') ? ftree_newNot(TPAExpr_toFunctionNode(expr->left))
+      : ftree_newBin(TPAExpr_toFunctionNode(expr->left), expr->val, TPAExpr_toFunctionNode(expr->right));
 		}
 		return 0;
 }
@@ -67,8 +79,18 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
         case PA_IK_Expr:
             f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr));
             addFunction(env, inst->u.expr.name, f);
-
             break;
+        
+        case PA_IK_Print:
+            f = interp_getFunctionByName(env, inst->u.expr.name);
+            if(f==0) {
+              fprintf(stderr,"Fonction inconnue\n");
+            }
+            else {
+              function_print(f);
+            }
+            break;
+            
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;
