@@ -32,5 +32,7 @@ TruthTable ftree_toTruthTable(FunctionTree*);
 
 void ftree_printDot(FunctionTree*);
 
+char * ftree_toString(FunctionNode*);
+
 #endif
 

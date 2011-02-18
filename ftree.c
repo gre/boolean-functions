@@ -19,3 +19,20 @@ typedef struct _FunctionNode {
 struct _FunctionTree {
   FunctionNode* root;
 };
+
+
+char * ftree_toString(FunctionNode* tree) {
+  char *sleft, *sright, *sret;
+  
+  if ( tree -> type == NodeType_OPERATOR) {
+    sleft = free_toString( tree -> left );
+    sright = free_toString( tree -> right );
+    sret = (*char) malloc( sizeof(char) * ( strlen(sleft) + strlen(sright) + 4 ) ); // 1 is operator, 2 spaces, \n
+    sprintf(sret,"%s %c %s",sleft,tree->val,sright);
+    return sret;
+  }
+  
+  if ( tree -> type == NodeType_VARIABLE) {
+    //return (char) 
+  }
+}

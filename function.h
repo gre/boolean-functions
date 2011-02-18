@@ -29,7 +29,7 @@ Function* function_parse(char*);
  * if function has been defined as expression: print it,
  * else, print the DNF
  */
-void function_print(Function);
+void function_print(Function *);
 
 /**
  * Print as Disjunctive Normal Form (DNF)
