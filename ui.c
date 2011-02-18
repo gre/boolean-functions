@@ -5,7 +5,7 @@
 int ui_waitCommand(TPA_Instruction* inst) {
   ui_print("$ ");
   fflush(stdout);
-  return pa_parser(&inst);
+  return pa_parser(inst);
 }
 
 void ui_onStart() {
