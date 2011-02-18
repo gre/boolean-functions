@@ -48,8 +48,22 @@ extern TPA_Expr* pa_newBool(int b) {
     t -> type = TPA_VALUE;
     return t;
 }
-extern TPA_Expr* pa_newVar(char s) { return (TPA_Expr*) (0x100200 + 0); }
+
+extern TPA_Expr* pa_newVar(char s) {
+    TPA_Expr* t = tpa_init();
+    t -> val = (int)s;
+    t -> type = TPA_VARIABLE;
+    return t;
+}
+
+extern TPA_Expr* pa_newNot(TPA_Expr*e) {
+    TPA_Expr* t = tpa_init();
+    t -> val = '!';
+    t -> type = TPA_OPERATOR;
+    t -> left = e;
+    return t;  
+}
+
 extern TPA_Expr* pa_newCall(char*s, TPA_Expr** t) { return (TPA_Expr*) (0x100300 + 0); }
-extern TPA_Expr* pa_newNot(TPA_Expr*e) { return (TPA_Expr*) (0x100400 + 0); }
 extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { return (TPA_Expr*) (0x100500 + 0); }
 extern TPA_Expr* pa_newWildcard() { return (TPA_Expr*) (0x100600 + 2); }
