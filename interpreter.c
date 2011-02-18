@@ -1,4 +1,5 @@
 #include "stdlib.h"
+#include "stdio.h"
 #include "interpreter.h"
 #include "function.h"
 #include "ftree.h"
@@ -40,45 +41,33 @@ void interp_free(Env* env) {
 }
 
 void addFunction(Env* env, char* name, Function* f) {
-    env -> functions[nbfunction++] = f;
+    env -> functions[env -> nbfunction ++] = f;
 }
 
-FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
-    return createWithNode(rec_tpa_ftree(expr));
-}
-FunctionNode* rec_tpa_ftree(TPA_Expr* expr) {
+
+static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr) {
     if(expr==0 || expr->type==TPA_UNDEF) return 0;
     if(expr->type==TPA_VALUE) return ftree_newBool(expr->val==1);
     if(expr->type==TPA_VARIABLE) return ftree_newVar((char)expr->val);
     if(expr->type==TPA_OPERATOR) {
-        if(expr->val=='!')
-            return ftree_newNot(expr->left);
-        else
-            return ftree_newBin(expr->left, expr->val, expr->right);
-    }
+			return (expr->val=='!') ? ftree_newNot(TPAExpr_toFunctionNode(expr->left))
+			: ftree_newBin(TPAExpr_toFunctionNode(expr->left), expr->val, TPAExpr_toFunctionNode(expr->right));
+		}
+		return 0;
+}
+
+static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
+    return ftree_createWithNode(TPAExpr_toFunctionNode(expr));
 }
 
 
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
-	switch(ins->kind) {
+	Function* f;
+	switch(inst->kind) {
         case PA_IK_Expr:
-            Function* f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst.u.expr.expr));
-            addFunction(env, inst.u.expr.name, f);
+            f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr));
+            addFunction(env, inst->u.expr.name, f);
 
-            break;
-        case PA_IK_Table:
-            fprintf(stderr," table fct=%s table=%p\n", inst.u.table.name, inst.u.table.vals);
-            break;
-        case PA_IK_Print:
-            fprintf(stderr," print fct=%s fmt=%d file=%s\n", inst.u.print.name, inst.u.print.fmt, inst.u.print.filename!=0 ? inst.u.print.filename : "default");
-            break;
-        case PA_IK_Point:
-            fprintf(stderr," point ens=%s point=%p\n", inst.u.print.name, inst.u.point.vals);
-            break;
-        case PA_IK_EvalPoint:
-            fprintf(stderr," eval fct=%s point=%p\n", inst.u.evalpoint.name, inst.u.evalpoint.vals);
-        case PA_IK_EvalEns:
-            fprintf(stderr," eval fct=%s ens=%s\n", inst.u.evalens.name, inst.u.evalens.ens);
             break;
         default:
             fprintf(stderr," Instruction inconnue\n");

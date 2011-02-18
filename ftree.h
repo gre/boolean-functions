@@ -18,9 +18,10 @@ typedef enum { // FIXME : don't remember all op required by specs
 } Operator;
 
 typedef struct _FunctionTree FunctionTree;
+typedef struct _FunctionNode FunctionNode;
 
+FunctionTree* ftree_createWithNode(FunctionNode* node);
 
-FunctionTree* ftree_init();
 FunctionTree* ftree_fromExpression(char*);
 FunctionTree* ftree_fromTruthTable(TruthTable);
 
@@ -32,7 +33,13 @@ TruthTable ftree_toTruthTable(FunctionTree*);
 
 void ftree_printDot(FunctionTree*);
 
-char * ftree_toString(FunctionNode*);
+char * ftree_toString(FunctionTree*);
+
+FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r);
+FunctionNode* ftree_newNot(FunctionNode* node);
+FunctionNode* ftree_newBool(int b);
+FunctionNode* ftree_newVar(char s);
+FunctionTree* ftree_createWithNode(FunctionNode* node);
 
 #endif
 

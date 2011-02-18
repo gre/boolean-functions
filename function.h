@@ -15,7 +15,7 @@ struct _Function {
 
 typedef struct _Function Function;
 
-Function* function_init(); // useless ?
+Function* function_createWithFunctionTree(FunctionTree* tree);
 
 /**
  * Print as expression :
