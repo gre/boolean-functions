@@ -16,9 +16,15 @@ struct _Env {
 typedef enum { TPA_UNDEF=0, TPA_VALUE, TPA_VARIABLE, TPA_OPERATOR } TPA_Type;
 
 struct _TPA_Expr {
-    int val; // value or num of variable or operator ('+', '*', '^')
+    /* 
+     * value: boolean=0 ou 1, = -1 pour wildcard 
+     * variable: num of the variable
+     * operator: ('+', '*', '^', '!')
+     */
+    int val; 
     TPA_Type type; // 
-    TPA_Expr *left, *right;
+    TPA_Expr *left; // also used for NOT
+    TPA_Expr *right; // = 0 for NOT
 };
 
 Env* interp_init() {
@@ -64,6 +70,22 @@ extern TPA_Expr* pa_newNot(TPA_Expr*e) {
     return t;  
 }
 
-extern TPA_Expr* pa_newCall(char*s, TPA_Expr** t) { return (TPA_Expr*) (0x100300 + 0); }
-extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { return (TPA_Expr*) (0x100500 + 0); }
-extern TPA_Expr* pa_newWildcard() { return (TPA_Expr*) (0x100600 + 2); }
+extern TPA_Expr* pa_newCall(char*s, TPA_Expr** t) {
+    return (TPA_Expr*) (0x100000); // TODO
+}
+
+extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { 
+    TPA_Expr* t = tpa_init();
+    t -> left = l;
+    t -> right = r;
+    t -> val = o;
+    t -> type = TPA_OPERATOR;
+    return t;
+}
+
+extern TPA_Expr* pa_newWildcard() { 
+    TPA_Expr* t = tpa_init();
+    t -> val = -1;
+    t -> type = TPA_VALUE;
+    return t;
+}
