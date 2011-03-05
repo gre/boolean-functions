@@ -11,7 +11,7 @@ int ui_waitCommand(TPA_Instruction* inst) {
 void ui_onStart() {
   ui_print("\tBy Nicolae Namolovan and Gaetan Renaudeau\n");
   ui_print("\tBoolean Functions interpeter v%g\n", VERSION);
-  ui_print("type 'help' for more info.\n");
+  ui_print("\tUse --help for more info.\n");
 }
 
 void ui_onStop() {
