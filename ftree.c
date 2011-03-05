@@ -36,6 +36,9 @@ FunctionNode* ftree_newVar(char s) {
     node -> val = (int)s; 
     node -> left = 0;
     node -> right = 0;
+  #ifdef DEBUG
+  printf("DEBUG: %p=ftree_newVar(%c)\n", node, s);
+  #endif
     return node;
 };
 
@@ -45,6 +48,9 @@ FunctionNode* ftree_newBool(int b) {
     node -> val = (int) b; 
     node -> left = 0;
     node -> right = 0;
+  #ifdef DEBUG
+  printf("DEBUG: %p=ftree_newBool(%d)\n", node, b);
+  #endif
     return node;
 };
 
@@ -54,9 +60,31 @@ FunctionNode* ftree_newNot(FunctionNode* node) {
     n -> val = Op_NOT; 
     n -> left = node;
     n -> right = 0;
+  #ifdef DEBUG
+  printf("DEBUG: %p=ftree_newNot(%p)\n", n, node);
+  #endif
     return n;
 };
 
+FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r) {
+    FunctionNode* node = malloc(sizeof(*node));
+    node -> type = NodeType_OPERATOR;
+    switch(o) {
+        case '+': node -> val = Op_OR; break;
+        case '*': node -> val = Op_AND; break;
+        case '^': node -> val = Op_XOR; break;
+    }
+    node -> left = l;
+    node -> right = r;
+  #ifdef DEBUG
+  printf("DEBUG: %p=ftree_newBin(%p, %c, %p)\n", node, l, o, r);
+  #endif
+    return node;
+
+};
+
+// FIXME: it sounds like there is some free() missing
+// Should use snprintf everywhere
 static char* rec_ftree_toString(FunctionNode* tree) {
   if(tree==0) return "";
   char *sleft, *sright, *sret, op;
@@ -81,7 +109,14 @@ static char* rec_ftree_toString(FunctionNode* tree) {
   }
   
   if ( tree -> type == NodeType_VARIABLE) {
-    //return (char) 
+    sret = (char*) malloc(1*sizeof(char));
+    snprintf(sret, 1, "%c", (char) tree -> val);
+    return sret;
+  }
+  if ( tree -> type == NodeType_VALUE) {
+    sret = (char*) malloc(1*sizeof(char));
+    snprintf(sret, 1, "%1d", tree -> val);
+    return sret;
   }
   return "";
 }
@@ -90,18 +125,4 @@ char* ftree_toString(FunctionTree* tree) {
   return rec_ftree_toString(tree->root);
 }
 
-
-FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r) {
-    FunctionNode* node = malloc(sizeof(*node));
-    node -> type = NodeType_OPERATOR;
-    switch(o) {
-        case '+': node -> val = Op_OR; break;
-        case '*': node -> val = Op_AND; break;
-        case '^': node -> val = Op_XOR; break;
-    }
-    node -> left = l;
-    node -> right = r;
-    return node;
-
-};
 

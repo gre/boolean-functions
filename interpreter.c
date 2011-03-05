@@ -58,6 +58,14 @@ Function* interp_getFunctionByName(Env* env, char* name) {
 }
 
 static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr) {
+	#ifdef TRACE
+	if(expr->type==TPA_VARIABLE)
+		printf("DEBUG: node var TPA_Expr(%p) = type:%d, var:%c\n", expr, expr->type, (char)expr->val);
+	else if(expr->type==TPA_OPERATOR)
+		printf("DEBUG: node op  TPA_Expr(%p) = type:%d, op: %c, left:%p, right:%p.\n", expr, expr->type, (char)expr->val, expr->left, expr->right);
+	else if(expr->type==TPA_VALUE)
+		printf("DEBUG: node val TPA_Expr(%p) = type:%d, val:%d.\n", expr, expr->type, expr->val);
+	#endif
     if(expr==0 || expr->type==TPA_UNDEF) return 0;
     if(expr->type==TPA_VALUE) return ftree_newBool(expr->val==1);
     if(expr->type==TPA_VARIABLE) return ftree_newVar((char)expr->val);

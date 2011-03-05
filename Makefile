@@ -1,6 +1,6 @@
 .PHONY: clean
 
-DEBUG = -Wall -g
+DEBUG = -Wall -g -DDEBUG
 OPT = ${DEBUG}
 
 all: clean main
