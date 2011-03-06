@@ -16,7 +16,7 @@ static TPA_Expr** pa_exprset_add_expr(TPA_Expr** set, TPA_Expr* e)
     } else {
         int nb;
         for (nb=0 ; set[nb]!=0 ; nb+=1);
-        ret = (TPA_Expr**) realloc(ret,sizeof(*ret)*(nb+2));
+        ret = (TPA_Expr**) realloc(set,sizeof(*ret)*(nb+2));
         ret[nb]=e; ret[nb+1]=0;
     }
     return ret;
