@@ -13,6 +13,10 @@ eval  { return TK_EVAL; }
         yylval.string = strdup(yytext); return TK_STRING; }
 
 [=+()-01!*] { return *yytext; }
+"/e"[a-z]*        { yylval.fmtval= PA_PF_expr;  return TK_PrintFormat; }
+"/b"[a-z]*        { yylval.fmtval= PA_PF_bdd;   return TK_PrintFormat; }
+"/t"[a-z]*        { yylval.fmtval= PA_PF_table; return TK_PrintFormat; }
+"/d"[a-z]*        { yylval.fmtval= PA_PF_disjonctive; return TK_PrintFormat; }
 [\n]      { return TK_EOL; }
 [ \t]     ;
 .         { return TK_ERROR; }
