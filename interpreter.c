@@ -3,6 +3,8 @@
 #include "interpreter.h"
 #include "function.h"
 #include "ftree.h"
+#include "btable.h"
+#include "globals.h"
 #include "parser/parser.h"
 
 struct _Env {
@@ -42,6 +44,13 @@ void interp_free(Env* env) {
 
 static void addFunction(Env* env, char* name, Function* f) {
     function_setName(f, name);
+		int i;
+		for(i=0; i<env->nbfunction; ++i) {
+			if(function_is(env->functions[i], name)) {
+				env->functions[i] = f;
+				return;
+			}
+		}
     env -> functions[env -> nbfunction ++] = f;
 }
 static void addPoint(Env* env, char* name, Points* p) {
@@ -80,6 +89,16 @@ static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
     return ftree_createWithNode(TPAExpr_toFunctionNode(expr));
 }
 
+static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
+    int size=0, i;
+		if(expr && *expr) for(size=0; expr[size]!=0; ++size);
+		TruthTable* table = btable_init(size);
+		for(i=0; i<size; ++i) {
+			btable_setVal(table, i, expr[i]->val);
+		}
+		return table;
+}
+
 
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	Function* f;
@@ -92,13 +111,20 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
             addFunction(env, inst->u.expr.name, f);
             break;
         
+				case PA_IK_Table:
+					f = function_createWithTruthTable(TPAExpr_toTruthTable(inst->u.table.vals));
+					addFunction(env, inst->u.table.name, f);
+					break;
+				
         case PA_IK_Print:
             f = interp_getFunctionByName(env, inst->u.expr.name);
             if(f==0) {
               fprintf(stderr,"Fonction inconnue\n");
             }
             else {
+							// TODO : switch format
               function_print(f);
+							function_printAsTruthTable(f);
             }
             break;
             

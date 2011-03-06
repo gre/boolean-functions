@@ -15,9 +15,11 @@ struct _Function {
 
 // TODO : print like this : fname(a,b,c) = a+(b*c)
 void function_print(Function *f) {
-  char * str;
-  str = ftree_toString(f->tree);
-  ui_print("%s = %s\n", f->symbol, str);
+  ui_print("%s = %s\n", f->symbol, ftree_toString(f->tree));
+}
+
+void function_printAsTruthTable(Function* f) {
+  ui_print("%s = %s\n", f->symbol, btable_toString(f->table));
 }
 
 static Function* function_init() {
@@ -26,7 +28,7 @@ static Function* function_init() {
   return f;
 }
 
-function_setName(Function* f, char* name) {
+void function_setName(Function* f, char* name) {
   if(f->symbol) free(f->symbol);
   f -> symbol = malloc((1+strlen(name))*sizeof(char));
   strcpy(f->symbol, name);
@@ -35,6 +37,14 @@ function_setName(Function* f, char* name) {
 Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree;
+  // TODO : generate other types
+  return f;
+}
+
+Function* function_createWithTruthTable(TruthTable* table) {
+  Function* f = function_init();
+  f -> table = table;
+  // TODO : generate other types
   return f;
 }
 

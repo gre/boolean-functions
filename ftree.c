@@ -123,6 +123,7 @@ static char* rec_ftree_toString(FunctionNode* tree) {
 }
 
 char* ftree_toString(FunctionTree* tree) {
+  if(tree==0) return "";
   return rec_ftree_toString(tree->root);
 }
 

@@ -3,18 +3,17 @@
 
 #include "globals.h"
 
-struct _TruthTable {
-  int size;
-  Bool* tab;
-};
-
 typedef struct _TruthTable TruthTable;
 
-int btable_equals(TruthTable, TruthTable);
+TruthTable* btable_init(int size);
+int btable_getSize(TruthTable* table);
+void btable_setVal(TruthTable* table, int index, Bool val);
+Bool btable_getVal(TruthTable* table, int index);
 
-TruthTable btable_parse(char*);
-void btable_print(TruthTable);
-void btable_printKarnaugh(TruthTable);
+int btable_equals(TruthTable*, TruthTable*);
+
+char* btable_toString(TruthTable*);
+char* btable_toStringKarnaugh(TruthTable*);
 
 #endif
 
