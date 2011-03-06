@@ -91,12 +91,13 @@ static char* rec_ftree_toString(FunctionNode* tree) {
   if ( tree -> type == NodeType_OPERATOR) {
     sleft = rec_ftree_toString( tree -> left );
     if(tree->val==Op_NOT) {
+      sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + 2 ) );
       op = '!';
-      sprintf(sret,"%c%s", op, sleft); 
+      sprintf(sret,"%c%s", op, sleft);
     }
     else {
       sright = rec_ftree_toString( tree -> right );
-      sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + strlen(sright) + 4 ) ); // 1 is operator, 2 spaces, \n
+      sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + strlen(sright) + 4 ) ); // 1 is operator, 2 spaces, \0
       if(tree->val==Op_OR)
         op = '+';
       else if(tree->val==Op_XOR)
@@ -109,13 +110,13 @@ static char* rec_ftree_toString(FunctionNode* tree) {
   }
   
   if ( tree -> type == NodeType_VARIABLE) {
-    sret = (char*) malloc(1*sizeof(char));
-    snprintf(sret, 1, "%c", (char) tree -> val);
+    sret = (char*) malloc(3*sizeof(char));
+    snprintf(sret, 2, "%c", (char) tree -> val);
     return sret;
   }
   if ( tree -> type == NodeType_VALUE) {
-    sret = (char*) malloc(1*sizeof(char));
-    snprintf(sret, 1, "%1d", tree -> val);
+    sret = (char*) malloc(3*sizeof(char));
+    snprintf(sret, 2, "%1d", tree -> val);
     return sret;
   }
   return "";

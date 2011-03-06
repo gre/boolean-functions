@@ -13,10 +13,11 @@ struct _Function {
   char* symbol;
 };
 
+// TODO : print like this : fname(a,b,c) = a+(b*c)
 void function_print(Function *f) {
   char * str;
   str = ftree_toString(f->tree);
-  ui_print("%s", str);
+  ui_print("%s = %s\n", f->symbol, str);
 }
 
 static Function* function_init() {
