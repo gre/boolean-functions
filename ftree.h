@@ -5,6 +5,9 @@
  * with operators, value and variables
  */
 
+typedef struct _FunctionTree FunctionTree;
+typedef struct _FunctionNode FunctionNode;
+
 #include "btable.h"
 #include "globals.h"
 
@@ -17,13 +20,10 @@ typedef enum { // FIXME : don't remember all op required by specs
   Op_NOT 
 } Operator;
 
-typedef struct _FunctionTree FunctionTree;
-typedef struct _FunctionNode FunctionNode;
 
 FunctionTree* ftree_createWithNode(FunctionNode* node);
 
 FunctionTree* ftree_fromExpression(char*);
-FunctionTree* ftree_fromTruthTable(TruthTable);
 
 void ftree_free(FunctionTree*);
 

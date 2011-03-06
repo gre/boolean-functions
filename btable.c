@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "globals.h"
+#include "ftree.h"
 #include "point.h"
 #include "btable.h"
 
@@ -25,6 +26,21 @@ TruthTable* btable_init(int size) {
 
 int btable_getSize(TruthTable* table) {
   return table->size;
+}
+int btable_getDimension(TruthTable* table) {
+  int dim = 0, i;
+  for(i=1; i<table->size; i*=2) 
+    ++dim;
+  return dim;
+}
+
+char* btable_generateVars(TruthTable* table) {
+  char* str = calloc(table->size+1, sizeof(*str));
+  int i;
+  for(i=0; i<table->size; ++i)
+    str[i] = 'a'+i;
+  str[i] = 0;
+  return str;
 }
 
 void btable_setVal(TruthTable* table, int index, Bool val) {
@@ -67,3 +83,26 @@ char* btable_toStringKarnaugh(TruthTable* table) {
   return 0;
 }
 
+FunctionTree* btable_toFunctionTree(TruthTable* table, char* vars) {
+  FunctionNode *root = 0, *branch, *node;
+  Point p;
+  int i, j;
+  int dim = btable_getDimension(table);
+  if(dim==0) return ftree_createWithNode(ftree_newBool(table->tab[0]));
+  for(i=0; i<table->size; ++i) {
+    if(table->tab[i]) {
+      p = point_createWithIndex(i, dim);
+      branch = 0;
+      for(j=0; j<dim; ++j) {
+        node = ftree_newVar(vars[j]);
+        if(!p.vect[j])
+          node = ftree_newNot(node);
+        branch = (branch==0) ? node : ftree_newBin(node, '*', branch);
+      }
+      root = (root==0) ? branch : ftree_newBin(root, '+', branch);
+    }
+  }
+  if(root==0)
+    root = ftree_newBool(0);
+  return ftree_createWithNode(root);
+}

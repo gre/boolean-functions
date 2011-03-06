@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "btable.h"
 #include "ftree.h"
 #include "point.h"
 #include "utils.h"

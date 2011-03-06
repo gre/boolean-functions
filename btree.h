@@ -4,9 +4,9 @@
  * A B Tree is a boolean tree representing the truth table
  */
 
+#include "globals.h"
+
 typedef struct _BoolTree BoolTree;
 
-#include "btable.h"
-#include "globals.h"
 
 #endif

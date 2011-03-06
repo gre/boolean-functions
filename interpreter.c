@@ -53,8 +53,10 @@ static void addFunction(Env* env, char* name, Function* f) {
 		}
     env -> functions[env -> nbfunction ++] = f;
 }
+
 static void addPoint(Env* env, char* name, Points* p) {
     // todo : points_setName
+    // todo : replace if name exists ( like addFunction() bellow )
     env -> points[env -> nbpoints ++] = p;
 }
 
@@ -90,8 +92,8 @@ static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
 }
 
 static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
-    int size=0, i;
-		if(expr && *expr) for(size=0; expr[size]!=0; ++size);
+    int size, i;
+		for(size=0; expr[size]!=0; ++size);
 		TruthTable* table = btable_init(size);
 		for(i=0; i<size; ++i) {
 			btable_setVal(table, i, expr[i]->val);
@@ -177,7 +179,8 @@ extern TPA_Expr* pa_newNot(TPA_Expr*e) {
 }
 
 extern TPA_Expr* pa_newCall(char*s, TPA_Expr** t) {
-    return (TPA_Expr*) (0x100000); // TODO
+    printf("pa_newCall not implemented yet!!!\n");
+    return (TPA_Expr*) (0x123456); // TODO
 }
 
 extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { 

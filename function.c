@@ -48,6 +48,8 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
 Function* function_createWithTruthTable(TruthTable* table) {
   Function* f = function_init();
   f -> table = table;
+  f -> vars = btable_generateVars(table);
+  f -> tree = btable_toFunctionTree(table, f->vars);
   // TODO : generate other types
   return f;
 }
