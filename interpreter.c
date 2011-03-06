@@ -103,7 +103,7 @@ static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	Function* f;
 	#ifdef DEBUG
-	printf("DEBUG: inst->kind: %d\n", inst->kind);
+	printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
 	#endif
 	switch(inst->kind) {
         case PA_IK_Expr:
@@ -117,17 +117,28 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 					break;
 				
         case PA_IK_Print:
-            f = interp_getFunctionByName(env, inst->u.expr.name);
+            f = interp_getFunctionByName(env, inst->u.print.name);
             if(f==0) {
               fprintf(stderr,"Fonction inconnue\n");
             }
             else {
 							// TODO : switch format
-              function_print(f);
-							function_printAsTruthTable(f);
+							switch(inst->u.print.fmt) {
+								case PA_PF_expr:
+									function_print(f);
+									break;
+								case PA_PF_bdd:
+									
+									break;
+								case PA_PF_table:
+									function_printAsTruthTable(f);
+									break;
+								case PA_PF_disjonctive:
+									break;
+							}
             }
             break;
-            
+				
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;
