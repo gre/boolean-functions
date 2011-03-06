@@ -29,11 +29,13 @@ void ftree_free(FunctionTree*);
 
 void ftree_normalize(FunctionTree*);
 
-TruthTable ftree_toTruthTable(FunctionTree*);
+TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars);
 
 void ftree_printDot(FunctionTree*);
 
 char * ftree_toString(FunctionTree*);
+
+char* ftree_getVars(FunctionTree* ftree);
 
 FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r);
 FunctionNode* ftree_newNot(FunctionNode* node);

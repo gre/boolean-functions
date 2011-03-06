@@ -14,6 +14,19 @@ extern void str_tolower(char* str) {
   }
 }
 
+extern int util_indexOfLetter(char letter, char* word) {
+  int i = 0;
+  while(word[i]) {
+    if(word[i] == letter)
+      return i;
+    ++ i;
+  }
+  return -1;
+}
+extern int util_letterInWord(char letter, char* word) {
+  return util_indexOfLetter(letter, word)!=-1;
+}
+
 extern char* str_trim(char *s) {
     char* newString;
     while(isspace(*s)) s++;

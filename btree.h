@@ -9,6 +9,4 @@ typedef struct _BoolTree BoolTree;
 #include "btable.h"
 #include "globals.h"
 
-
 #endif
-

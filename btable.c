@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "globals.h"
+#include "point.h"
 #include "btable.h"
 
 struct _TruthTable {
@@ -12,12 +13,9 @@ struct _TruthTable {
 TruthTable* btable_init(int size) {
   int i;
   for(i=1; i<size; i*=2);
-  if(i==1)
-    size = 0;
-  else
-    size = i;
+  size = i;
 	#ifdef DEBUG
-	printf("DEBUG: size: %d\n", size);
+	printf("DEBUG: btable_init size: %d\n", size);
 	#endif
   TruthTable* table = malloc(sizeof(*table));
   table -> size = size;
@@ -37,6 +35,13 @@ Bool btable_getVal(TruthTable* table, int index) {
   return table->tab[index];
 }
 
+void btable_setPointVal(TruthTable* table, Point p, Bool val) {
+  btable_setVal(table, point_toIndex(p), val);
+}
+Bool btable_getPointVal(TruthTable* table, Point p) {
+  return btable_getVal(table, point_toIndex(p));
+}
+
 int btable_equals(TruthTable* a, TruthTable* b) {
   if(a->size != b->size) return 0;
   int i;
@@ -49,10 +54,9 @@ int btable_equals(TruthTable* a, TruthTable* b) {
 char* btable_toString(TruthTable* table) {
   if(table==0) return "";
   int i, c = 0;
-  char* out = malloc(sizeof(char)*(table->size*2+3));
+  char* out = malloc(sizeof(char)*(table->size+3));
   out[c++] = '(';
   for(i=0; i<table->size; ++i) {
-    if(i!=0) out[c++] = ',';
     out[c++] = table->tab[i]==1 ? '1' : '0';
   }
   out[c++] = ')';

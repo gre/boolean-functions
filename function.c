@@ -11,6 +11,7 @@ struct _Function {
   BoolTree* btree; // the DNF representation of the function : generated on create
   TruthTable* table; // the truth table representation of the function
   char* symbol;
+  char* vars; // variables letters in alphabetic order (ex: "abcez")
 };
 
 // TODO : print like this : fname(a,b,c) = a+(b*c)
@@ -25,6 +26,7 @@ void function_printAsTruthTable(Function* f) {
 static Function* function_init() {
   Function* f = malloc(sizeof(*f));
   f->symbol = 0;
+  f->vars = 0;
   return f;
 }
 
@@ -37,6 +39,8 @@ void function_setName(Function* f, char* name) {
 Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree;
+  f -> vars = ftree_getVars(tree);
+  f -> table = ftree_toTruthTable(tree, f -> vars);
   // TODO : generate other types
   return f;
 }

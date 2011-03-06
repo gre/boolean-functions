@@ -10,5 +10,7 @@
 */
 extern char* str_trim(char *s);
 extern void str_tolower(char* str);
+extern int util_letterInWord(char letter, char* word);
+extern int util_indexOfLetter(char letter, char* word);
 
 #endif

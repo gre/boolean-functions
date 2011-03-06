@@ -3,6 +3,9 @@
 #include <string.h>
 
 #include "ftree.h"
+#include "point.h"
+#include "utils.h"
+#include "globals.h"
 
 /**
  * type : value, variable or operator
@@ -127,4 +130,75 @@ char* ftree_toString(FunctionTree* tree) {
   return rec_ftree_toString(tree->root);
 }
 
+static void rec_ftree_getVars(FunctionNode* tree, char* vars) {
+  char c;
+  if(tree==0) return;
+  if(tree->type==NodeType_VARIABLE) {
+    c = (char) tree->val;
+    if(!util_letterInWord(c, vars))
+      vars[strlen(vars)] = c;
+  }
+  else if(tree->type==NodeType_OPERATOR) {
+    rec_ftree_getVars(tree->left, vars);
+    rec_ftree_getVars(tree->right, vars);
+  }
+}
 
+static int charcmp(const void* a, const void* b) {
+  return *((char*) a) - *((char*) b);
+}
+
+char* ftree_getVars(FunctionTree* ftree) {
+  char* vars = calloc(VARIABLE_SIZE+1, sizeof(char)); // max size of variable
+  rec_ftree_getVars(ftree->root, vars);
+  qsort(vars, strlen(vars), sizeof(*vars), charcmp);
+  return vars;
+}
+
+static Bool fnode_eval(FunctionNode* node, Point p, char* vars) {
+  int i;
+  char c;
+  Bool l, r;
+  if(node==0) return 0;
+  if(node->type==NodeType_VALUE) return node->val;
+  if(node->type==NodeType_VARIABLE) {
+    c = (char) node->val;
+    i = util_indexOfLetter(c, vars);
+    return p.vect[i];
+  }
+  if(node->type==NodeType_OPERATOR) {
+    l = fnode_eval(node->left, p, vars);
+    r = fnode_eval(node->right, p, vars);
+    switch(node->val) {
+      case Op_OR:
+        return l || r;
+      case Op_AND:
+        return l && r;
+      case Op_XOR:
+        return l && !r || !l && r;
+      case Op_NOT:
+        return !l;
+    }
+  }
+  return 0;
+}
+
+Bool ftree_eval(FunctionTree* tree, Point p, char* vars) {
+  return fnode_eval(tree->root, p, vars);
+}
+
+TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars) {
+  int i, size, len = strlen(vars);
+  Point p;
+  Bool b;
+  TruthTable* table;
+  for(i=0, size=1; i<len; ++i)
+    size *= 2;
+  table = btable_init(size);
+  for(i=0; i<size; ++i) {
+    p = point_createWithIndex(i, len);
+    b = ftree_eval(ftree, p, vars);
+    btable_setPointVal(table, p, b);
+  }
+  return table;
+}

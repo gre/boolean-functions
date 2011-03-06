@@ -39,7 +39,7 @@ void function_printAsTruthTable(Function*); // Must use btable_print
 
 void function_printAsKarnaugh(Function*); // Must use btable_printKarnaugh
 
-Bool function_eval(Function*, Point);
+Bool function_eval(Function*, Point); // Must use btable_getPointVal
 
 int function_is(Function* f, char* name);
 

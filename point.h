@@ -8,11 +8,13 @@ typedef struct _Point {
   int dim;
 } Point;
 
-Point point_create(Bool*, int);
+Point point_create(Bool* vals, int dim);
+Point point_createWithIndex(int index, int dim);
+int point_toIndex(Point p);
 
 int point_equals(Point, Point);
 
-void point_print(Point);
+char* point_toString(Point);
 
 #endif
 
