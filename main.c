@@ -32,8 +32,11 @@ int main(int argc, char* argv[]) {
   Env* env = interp_init();
   TPA_Instruction instruction;
   ui_onStart();
-  while(ui_waitCommand(&instruction) != -1) {
-	 interp_runCommand(env, &instruction); 
+	int status = 0;
+  while(status != -1) {
+		status = ui_waitCommand(&instruction);
+		if(status==1)
+			interp_runCommand(env, &instruction); 
   }
   ui_onStop();
   interp_free(env);

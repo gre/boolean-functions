@@ -83,6 +83,9 @@ static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
 
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	Function* f;
+	#ifdef DEBUG
+	printf("DEBUG: inst->kind: %d\n", inst->kind);
+	#endif
 	switch(inst->kind) {
         case PA_IK_Expr:
             f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr));
