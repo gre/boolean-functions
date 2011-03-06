@@ -175,7 +175,7 @@ static Bool fnode_eval(FunctionNode* node, Point p, char* vars) {
       case Op_AND:
         return l && r;
       case Op_XOR:
-        return l && !r || !l && r;
+        return (l && !r) || (!l && r);
       case Op_NOT:
         return !l;
     }

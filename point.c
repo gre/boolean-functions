@@ -14,7 +14,7 @@ int point_toIndex(Point p) {
   int index=0, i;
   int pow = 1;
   for(i=0; i<p.dim; ++i) {
-    index += p.vect[i]*pow;
+    index += p.vect[p.dim-i-1]*pow;
     pow *= 2;
   }
   return index;
@@ -32,7 +32,7 @@ Point point_createWithIndex(int index, int dim) {
   Point p = point_init(dim);
   int i;
   for(i=0; i<dim; ++i)
-    p.vect[i] = (index>>i)&1;
+    p.vect[dim-i-1] = (index>>i)&1;
   return p;
 }
 
