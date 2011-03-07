@@ -20,7 +20,7 @@ points.o: points.c points.h
 btree.o: btree.c btree.h
 	gcc -c btree.c -o $@ $(OPT)
   
-btable.o: btable.c btable.h point.o ftree.o
+btable.o: btable.c btable.h point.o ftree.o btree.o
 	gcc -c btable.c -o $@ $(OPT)
   
 ftree.o: ftree.c ftree.h point.o btree.o

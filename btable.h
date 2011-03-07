@@ -5,6 +5,7 @@ typedef struct _TruthTable TruthTable;
 
 #include "globals.h"
 #include "ftree.h"
+#include "btree.h"
 
 
 TruthTable* btable_init(int size);
@@ -19,6 +20,8 @@ int btable_equals(TruthTable*, TruthTable*);
 char* btable_toString(TruthTable*);
 char* btable_toStringKarnaugh(TruthTable*);
 FunctionTree* btable_toFunctionTree(TruthTable* table, char* vars);
+
+BoolTree* btable_toBoolTree(TruthTable* table, char* vars);
 
 #endif
 

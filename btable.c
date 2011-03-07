@@ -5,6 +5,7 @@
 #include "ftree.h"
 #include "point.h"
 #include "btable.h"
+#include "btree.h"
 
 struct _TruthTable {
   int size;
@@ -105,4 +106,11 @@ FunctionTree* btable_toFunctionTree(TruthTable* table, char* vars) {
   if(root==0)
     root = ftree_newBool(0);
   return ftree_createWithNode(root);
+}
+
+
+BoolTree* btable_toBoolTree(TruthTable* table, char* vars) {
+  BoolTree* btree = 0;
+  // TODO
+  return btree;
 }

@@ -45,10 +45,9 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree;
   f -> vars = ftree_getVars(tree);
-  f -> fmd = ftree_clone(tree);
-  // TODO here : simplify fmd
+  f -> fmd = ftree_simplify(ftree_clone(tree));
   f -> table = ftree_toTruthTable(f->fmd, f->vars);
-  // TODO : generate other types
+  f -> btree = btable_toBoolTree(f->table, f->vars);
   return f;
 }
 
@@ -56,10 +55,9 @@ Function* function_createWithTruthTable(TruthTable* table) {
   Function* f = function_init();
   f -> table = table;
   f -> vars = btable_generateVars(table);
-  f -> fmd = ftree_clone(f->tree);
-  // TODO here : simplify fmd
-  f -> tree = btable_toFunctionTree(f->fmd, f->vars);
-  // TODO : generate other types
+  f -> tree = btable_toFunctionTree(f->table, f->vars);
+  f -> fmd = ftree_simplify(ftree_clone(f->tree));
+  f -> btree = btable_toBoolTree(f->table, f->vars);
   return f;
 }
 
