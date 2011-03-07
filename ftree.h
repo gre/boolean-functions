@@ -23,6 +23,8 @@ typedef enum { // FIXME : don't remember all op required by specs
 
 FunctionTree* ftree_createWithNode(FunctionNode* node);
 
+FunctionTree* ftree_clone(FunctionTree* node);
+
 FunctionTree* ftree_fromExpression(char*);
 
 void ftree_free(FunctionTree*);

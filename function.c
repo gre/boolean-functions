@@ -8,6 +8,7 @@
 
 struct _Function {
   FunctionTree* tree;
+  FunctionTree* fmd;
   BoolTree* btree; // the DNF representation of the function : generated on create
   TruthTable* table; // the truth table representation of the function
   char* symbol;
@@ -25,6 +26,10 @@ void function_printAsTruthTable(Function* f) {
 
 static Function* function_init() {
   Function* f = malloc(sizeof(*f));
+  f->tree = 0;
+  f->fmd = 0;
+  f->btree = 0;
+  f->table = 0;
   f->symbol = 0;
   f->vars = 0;
   return f;
@@ -40,7 +45,9 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree;
   f -> vars = ftree_getVars(tree);
-  f -> table = ftree_toTruthTable(tree, f -> vars);
+  f -> fmd = ftree_clone(tree);
+  // TODO here : simplify fmd
+  f -> table = ftree_toTruthTable(f->fmd, f->vars);
   // TODO : generate other types
   return f;
 }
@@ -49,7 +56,9 @@ Function* function_createWithTruthTable(TruthTable* table) {
   Function* f = function_init();
   f -> table = table;
   f -> vars = btable_generateVars(table);
-  f -> tree = btable_toFunctionTree(table, f->vars);
+  f -> fmd = ftree_clone(f->tree);
+  // TODO here : simplify fmd
+  f -> tree = btable_toFunctionTree(f->fmd, f->vars);
   // TODO : generate other types
   return f;
 }

@@ -87,6 +87,21 @@ FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r) {
 
 };
 
+
+static FunctionNode* ftree_cloneNode(FunctionNode* node) {
+  if(node==0) return 0;
+  FunctionNode* n = malloc(sizeof(*n));
+  n->type = node->type;
+  n->val = node->val;
+  n->left = ftree_cloneNode(node->left);
+  n->right = ftree_cloneNode(node->right);
+  return n;
+}
+
+FunctionTree* ftree_clone(FunctionTree* node) {
+  return ftree_createWithNode(ftree_cloneNode(node->root));
+}
+
 // FIXME: it sounds like there is some free() missing
 // Should use snprintf everywhere
 static char* rec_ftree_toString(FunctionNode* tree) {
