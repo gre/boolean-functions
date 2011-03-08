@@ -17,6 +17,7 @@ eval  { return TK_EVAL; }
 "/b"[a-z]*        { yylval.fmtval= PA_PF_bdd;   return TK_PrintFormat; }
 "/t"[a-z]*        { yylval.fmtval= PA_PF_table; return TK_PrintFormat; }
 "/d"[a-z]*        { yylval.fmtval= PA_PF_disjonctive; return TK_PrintFormat; }
+"/k"[a-z]*        { yylval.fmtval= PA_PF_karnaugh; return TK_PrintFormat; }
 [\n]      { return TK_EOL; }
 [ \t]     ;
 .         { return TK_ERROR; }
