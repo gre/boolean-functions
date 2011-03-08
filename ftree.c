@@ -102,6 +102,13 @@ FunctionTree* ftree_clone(FunctionTree* node) {
   return ftree_createWithNode(ftree_cloneNode(node->root));
 }
 
+char ftree_operatorToChar(int val) {
+  if(val==Op_OR) return '+';
+  if(val==Op_XOR) return '^';
+  if(val==Op_AND) return '*';
+  return '!';
+}
+
 // FIXME: it sounds like there is some free() missing
 // Should use snprintf everywhere
 static char* rec_ftree_toString(FunctionNode* tree) {
@@ -117,12 +124,7 @@ static char* rec_ftree_toString(FunctionNode* tree) {
     else {
       sright = rec_ftree_toString( tree -> right );
       sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + strlen(sright) + 4 ) ); // 1 is operator, 2 spaces, \0
-      if(tree->val==Op_OR)
-        op = '+';
-      else if(tree->val==Op_XOR)
-        op = '^';
-      else
-        op = '*';
+      op = ftree_operatorToChar(tree->val);
       sprintf(sret,"(%s%c%s)", sleft, op, sright); 
     }
     return sret;
@@ -230,6 +232,7 @@ FunctionTree* ftree_simplify(FunctionTree* ftree) {
  */
 static void rec_ftree_printDot(FunctionNode* node, FILE* out, int id) {
   int lid, rid;
+  if(node==0) return;
   if(node->type==NodeType_VALUE) {
     fprintf(out, "n%d [label=\"%d\"]\n", id, node->val);
   }
@@ -239,7 +242,7 @@ static void rec_ftree_printDot(FunctionNode* node, FILE* out, int id) {
   else if(node->type==NodeType_OPERATOR) {
     lid = 2*id;
     rid = 2*id+1;
-    fprintf(out, "n%d [label=\"%c\"]\n", id, (char)node->val);
+    fprintf(out, "n%d [label=\"%c\"]\n", id, ftree_operatorToChar(node->val));
     fprintf(out, "n%d -- n%d\n", id, lid);
     fprintf(out, "n%d -- n%d\n", id, rid);
     rec_ftree_printDot(node->left, out, lid);

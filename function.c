@@ -9,19 +9,26 @@
 struct _Function {
   FunctionTree* tree;
   FunctionTree* fmd;
-  BoolTree* btree; // the DNF representation of the function : generated on create
-  TruthTable* table; // the truth table representation of the function
+  BoolTree* btree;
+  TruthTable* table;
   char* symbol;
   char* vars; // variables letters in alphabetic order (ex: "abcez")
 };
 
 // TODO : print like this : fname(a,b,c) = a+(b*c)
-void function_print(Function *f) {
-  ui_print("%s = %s\n", f->symbol, ftree_toString(f->tree));
+void function_print(Function *f, FILE* out) {
+  fprintf(out, "%s = %s\n", f->symbol, ftree_toString(f->tree));
 }
 
-void function_printAsTruthTable(Function* f) {
-  ui_print("%s = %s\n", f->symbol, btable_toString(f->table));
+void function_printAsTruthTable(Function* f, FILE* out) {
+  fprintf(out, "%s = %s\n", f->symbol, btable_toString(f->table));
+}
+
+void function_printAsBDD(Function* f, FILE* out) {
+  btree_printDot(f->btree, out);
+}
+void function_printAsTree(Function* f, FILE* out) {
+  ftree_printDot(f->tree, out);
 }
 
 static Function* function_init() {

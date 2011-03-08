@@ -15,17 +15,17 @@ Function* function_createWithTruthTable(TruthTable* table);
  * Print as expression :
  * print the DNF
  */
-void function_print(Function *);
+void function_print(Function *, FILE* out);
 
 /**
  * Print as Disjunctive Normal Form (DNF)
  */
-void function_printAsDNF(Function*);
+void function_printAsDNF(Function*, FILE* out);
 
 /**
  * Print tree in dot format
  */
-void function_printAsTree(Function*); // Must use btree_print
+void function_printAsTree(Function*, FILE* out); // Must use btree_print
 
 
 void function_setName(Function* f, char* name);
@@ -33,11 +33,11 @@ void function_setName(Function* f, char* name);
 /**
  * Print binary decision diagram (BDD) in dot format
  */
-void function_printAsBDD(Function*);
+void function_printAsBDD(Function*, FILE* out);
 
-void function_printAsTruthTable(Function*); // Must use btable_print
+void function_printAsTruthTable(Function*, FILE* out); // Must use btable_print
 
-void function_printAsKarnaugh(Function*); // Must use btable_printKarnaugh
+void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_printKarnaugh
 
 Bool function_eval(Function*, Point); // Must use btable_getPointVal
 

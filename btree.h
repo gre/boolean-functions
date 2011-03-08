@@ -15,4 +15,6 @@ BoolNode* btree_newNode(BoolNode* l, char var, BoolNode* r);
 
 BoolNode* btree_newLeaf(int b);
 
+void btree_printDot(BoolTree* btree, FILE* out);
+
 #endif

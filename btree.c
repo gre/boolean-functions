@@ -40,6 +40,7 @@ BoolNode* btree_newLeaf(int b) {
  */
 static void rec_btree_printDot(BoolNode* node, FILE* out, int id) {
   int lid, rid;
+  if(node==0) return;
   if(node->left==0) {
     // Leaf
     fprintf(out, "n%d [label=\"%d\"]\n", id, node->val);
