@@ -33,7 +33,7 @@ void ftree_normalize(FunctionTree*);
 
 TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars);
 
-void ftree_printDot(FunctionTree*);
+void ftree_printDot(FunctionTree* ftree, FILE* out);
 
 char * ftree_toString(FunctionTree*);
 
