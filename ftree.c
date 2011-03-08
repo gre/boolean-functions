@@ -234,17 +234,17 @@ static void rec_ftree_printDot(FunctionNode* node, FILE* out, int id) {
   int lid, rid;
   if(node==0) return;
   if(node->type==NodeType_VALUE) {
-    fprintf(out, "n%d [label=\"%d\"]\n", id, node->val);
+    fprintf(out, "  n%d [label=\"%d\"]\n", id, node->val);
   }
   else if(node->type==NodeType_VARIABLE) {
-    fprintf(out, "n%d [label=\"%c\"]\n", id, (char)node->val);
+    fprintf(out, "  n%d [label=\"%c\"]\n", id, (char)node->val);
   }
   else if(node->type==NodeType_OPERATOR) {
     lid = 2*id;
     rid = 2*id+1;
-    fprintf(out, "n%d [label=\"%c\"]\n", id, ftree_operatorToChar(node->val));
-    fprintf(out, "n%d -- n%d\n", id, lid);
-    fprintf(out, "n%d -- n%d\n", id, rid);
+    fprintf(out, "  n%d [label=\"%c\"]\n", id, ftree_operatorToChar(node->val));
+    fprintf(out, "  n%d -- n%d\n", id, lid);
+    fprintf(out, "  n%d -- n%d\n", id, rid);
     rec_ftree_printDot(node->left, out, lid);
     rec_ftree_printDot(node->right, out, rid);
   }

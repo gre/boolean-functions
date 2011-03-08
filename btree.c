@@ -43,15 +43,15 @@ static void rec_btree_printDot(BoolNode* node, FILE* out, int id) {
   if(node==0) return;
   if(node->left==0) {
     // Leaf
-    fprintf(out, "n%d [label=\"%d\"]\n", id, node->val);
+    fprintf(out, "  n%d [label=\"%d\"]\n", id, node->val);
   }
   else {
     // Node
     lid = 2*id;
     rid = 2*id+1;
-    fprintf(out, "n%d [label=\"%c\"]\n", id, (char)node->val);
-    fprintf(out, "n%d -- n%d\n", id, lid);
-    fprintf(out, "n%d -- n%d\n", id, rid);
+    fprintf(out, "  n%d [label=\"%c\"]\n", id, (char)node->val);
+    fprintf(out, "  n%d -- n%d\n", id, lid);
+    fprintf(out, "  n%d -- n%d\n", id, rid);
     rec_btree_printDot(node->left, out, lid);
     rec_btree_printDot(node->right, out, rid);
   }
