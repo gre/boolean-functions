@@ -23,7 +23,7 @@ BoolNode* btree_newNode(BoolNode* l, char var, BoolNode* r) {
   BoolNode* node = malloc(sizeof(*node));
   node -> val = var;
   node -> left = l;
-  node -> left = r;
+  node -> right = r;
   return node;
 }
 
@@ -31,7 +31,7 @@ BoolNode* btree_newLeaf(int b) {
   BoolNode* node = malloc(sizeof(*node));
   node -> val = b;
   node -> left = 0;
-  node -> left = 0;
+  node -> right = 0;
   return node;
 }
 
