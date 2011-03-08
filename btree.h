@@ -7,6 +7,12 @@
 #include "globals.h"
 
 typedef struct _BoolTree BoolTree;
+typedef struct _BoolNode BoolNode;
 
+BoolTree* btree_createTreeWith(BoolNode* root);
+
+BoolNode* btree_newNode(BoolNode* l, char var, BoolNode* r);
+
+BoolNode* btree_newLeaf(int b);
 
 #endif
