@@ -51,7 +51,8 @@ typedef enum _TPA_PrintFormat {
     PA_PF_expr,
     PA_PF_bdd,
     PA_PF_table,
-    PA_PF_disjonctive
+    PA_PF_disjonctive,
+    PA_PF_karnaugh
 } TPA_PrintFormat;
 
 typedef struct _TPA_Instruction {

@@ -137,6 +137,10 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									break;
 								case PA_PF_disjonctive:
 									break;
+								
+								case PA_PF_karnaugh:
+									
+									break;
 							}
             }
             break;
