@@ -17,4 +17,6 @@ BoolNode* btree_newLeaf(int b);
 
 void btree_printDot(BoolTree* btree, FILE* out);
 
+BoolTree* btable_simplify(BoolTree*);
+
 #endif

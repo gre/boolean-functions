@@ -54,7 +54,7 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
   f -> vars = ftree_getVars(tree);
   f -> fmd = ftree_simplify(ftree_clone(tree));
   f -> table = ftree_toTruthTable(f->fmd, f->vars);
-  f -> btree = btable_toBoolTree(f->table, f->vars);
+  f -> btree = btable_simplify(btable_toBoolTree(f->table, f->vars));
   return f;
 }
 
