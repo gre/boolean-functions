@@ -19,6 +19,11 @@ send "print /a funct\r"
 expect "label"
 expect "n6 *"
 
+# test table and same funct name collision
+send "table funct = (0001)\r"
+send "print /e funct\r"
+expect "funct = (b*a)"
+
 interact
 
 #send -- "print /t funct\r"
