@@ -16,15 +16,14 @@ struct _Function {
 };
 
 // TODO : print like this : fname(a,b,c) = a+(b*c)
+char * sfree;
 void function_print(Function *f, FILE* out) {
-  char * s;
-  s = ftree_toString(f->tree);
-  fprintf(out, "%s = %s\n", f->symbol, s);
-  if (s != 0) free(s);
+  fprintf(out, "%s = %s\n", f->symbol, sfree = ftree_toString(f->tree));
+  if (sfree != 0) free(sfree);
 }
-
 void function_printAsTruthTable(Function* f, FILE* out) {
-  fprintf(out, "%s = %s\n", f->symbol, btable_toString(f->table));
+  fprintf(out, "%s = %s\n", f->symbol, sfree = btable_toString(f->table));
+  if (sfree != 0) free(sfree);
 }
 
 void function_printAsBDD(Function* f, FILE* out) {
@@ -32,6 +31,10 @@ void function_printAsBDD(Function* f, FILE* out) {
 }
 void function_printAsTree(Function* f, FILE* out) {
   ftree_printDot(f->tree, out);
+}
+
+void function_printAsKarnaugh(Function* f, FILE* out) {
+	//fprintf(out, "%s = %s\n", f->symbol, btable_toStringKarnaugh(f->table,f->vars));
 }
 
 static Function* function_init() {

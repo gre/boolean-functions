@@ -106,7 +106,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	Function* f;
 	FILE* out;
 	#ifdef DEBUG
-	printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
+	//printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
 	#endif
 	switch(inst->kind) {
         case PA_IK_Expr:
@@ -149,7 +149,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									break;
 								
 								case PA_PF_karnaugh:
-									
+									function_printAsKarnaugh(f, out);
 									break;
 							}
             }

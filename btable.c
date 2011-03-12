@@ -69,7 +69,7 @@ int btable_equals(TruthTable* a, TruthTable* b) {
 }
 
 char* btable_toString(TruthTable* table) {
-  if(table==0) return "";
+  if(table==0) return 0;
   int i, c = 0;
   char* out = malloc(sizeof(char)*(table->size+3));
   out[c++] = '(';
@@ -81,6 +81,7 @@ char* btable_toString(TruthTable* table) {
   return out;
 }
 char* btable_toStringKarnaugh(TruthTable* table) {
+  
   return 0;
 }
 

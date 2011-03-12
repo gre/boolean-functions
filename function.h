@@ -35,9 +35,9 @@ void function_setName(Function* f, char* name);
  */
 void function_printAsBDD(Function*, FILE* out);
 
-void function_printAsTruthTable(Function*, FILE* out); // Must use btable_print
+void function_printAsTruthTable(Function*, FILE* out); // Must use btable_toString
 
-void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_printKarnaugh
+void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_toStringKarnaugh
 
 Bool function_eval(Function*, Point); // Must use btable_getPointVal
 
