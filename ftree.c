@@ -109,23 +109,24 @@ char ftree_operatorToChar(int val) {
   return '!';
 }
 
-// FIXME: it sounds like there is some free() missing
-// Should use snprintf everywhere
 static char* rec_ftree_toString(FunctionNode* tree) {
   if(tree==0) return "";
   char *sleft, *sright, *sret, op;
+  int size;
   if ( tree -> type == NodeType_OPERATOR) {
     sleft = rec_ftree_toString( tree -> left );
     if(tree->val==Op_NOT) {
-      sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + 2 ) );
+      size = strlen(sleft) + 2;
+      sret = (char*) malloc( sizeof(char) * size );
       op = '!';
-      sprintf(sret,"%c%s", op, sleft);
+      snprintf(sret,size,"%c%s", op, sleft);
     }
     else {
       sright = rec_ftree_toString( tree -> right );
-      sret = (char*) malloc( sizeof(char) * ( strlen(sleft) + strlen(sright) + 4 ) ); // 1 is operator, 2 spaces, \0
+      size = strlen(sleft) + strlen(sright) + 4; // 1 is operator, 2 spaces, \0
+      sret = (char*) malloc( sizeof(char) * size);
       op = ftree_operatorToChar(tree->val);
-      sprintf(sret,"(%s%c%s)", sleft, op, sright); 
+      snprintf(sret,size,"(%s%c%s)", sleft, op, sright); 
     }
     return sret;
   }
@@ -144,7 +145,7 @@ static char* rec_ftree_toString(FunctionNode* tree) {
 }
 
 char* ftree_toString(FunctionTree* tree) {
-  if(tree==0) return "";
+  if(tree==0) return 0;
   return rec_ftree_toString(tree->root);
 }
 

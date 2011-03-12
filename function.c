@@ -17,7 +17,10 @@ struct _Function {
 
 // TODO : print like this : fname(a,b,c) = a+(b*c)
 void function_print(Function *f, FILE* out) {
-  fprintf(out, "%s = %s\n", f->symbol, ftree_toString(f->tree));
+  char * s;
+  s = ftree_toString(f->tree);
+  fprintf(out, "%s = %s\n", f->symbol, s);
+  if (s != 0) free(s);
 }
 
 void function_printAsTruthTable(Function* f, FILE* out) {
