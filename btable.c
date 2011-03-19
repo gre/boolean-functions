@@ -16,9 +16,6 @@ TruthTable* btable_init(int size) {
   int i;
   for(i=1; i<size; i*=2);
   size = i;
-	#ifdef DEBUG
-	printf("DEBUG: btable_init size: %d\n", size);
-	#endif
   TruthTable* table = malloc(sizeof(*table));
   table -> size = size;
   table -> tab = calloc(size, sizeof(Bool)); // alloced and filled with zeros
@@ -37,8 +34,8 @@ int btable_getDimension(TruthTable* table) {
 
 char* btable_generateVars(TruthTable* table) {
   char* str = calloc(table->size+1, sizeof(*str));
-  int i;
-  for(i=0; i<table->size; ++i)
+  int i, dim = btable_getDimension(table);
+  for(i=0; i<dim; ++i)
     str[i] = 'a'+i;
   str[i] = 0;
   return str;

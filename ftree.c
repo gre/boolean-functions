@@ -40,9 +40,6 @@ FunctionNode* ftree_newVar(char s) {
     node -> val = (int)s; 
     node -> left = 0;
     node -> right = 0;
-  #ifdef DEBUG
-  printf("DEBUG: %p=ftree_newVar(%c)\n", node, s);
-  #endif
     return node;
 };
 
@@ -52,9 +49,6 @@ FunctionNode* ftree_newBool(int b) {
     node -> val = (int) b; 
     node -> left = 0;
     node -> right = 0;
-  #ifdef DEBUG
-  printf("DEBUG: %p=ftree_newBool(%d)\n", node, b);
-  #endif
     return node;
 };
 
@@ -64,9 +58,6 @@ FunctionNode* ftree_newNot(FunctionNode* node) {
     n -> val = Op_NOT; 
     n -> left = node;
     n -> right = 0;
-  #ifdef DEBUG
-  printf("DEBUG: %p=ftree_newNot(%p)\n", n, node);
-  #endif
     return n;
 };
 
@@ -80,9 +71,6 @@ FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r) {
     }
     node -> left = l;
     node -> right = r;
-  #ifdef DEBUG
-  printf("DEBUG: %p=ftree_newBin(%p, %c, %p)\n", node, l, o, r);
-  #endif
     return node;
 
 };

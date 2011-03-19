@@ -18,11 +18,11 @@ struct _Function {
 // TODO : print like this : fname(a,b,c) = a+(b*c)
 char * sfree;
 void function_print(Function *f, FILE* out) {
-  fprintf(out, "%s = %s\n", f->symbol, sfree = ftree_toString(f->tree));
+  fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->tree));
   if (sfree != 0) free(sfree);
 }
 void function_printAsTruthTable(Function* f, FILE* out) {
-  fprintf(out, "%s = %s\n", f->symbol, sfree = btable_toString(f->table));
+  fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = btable_toString(f->table));
   if (sfree != 0) free(sfree);
 }
 
