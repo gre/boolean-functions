@@ -6,7 +6,6 @@
 #include "globals.h"
 #include "parser/parser.h"
 
-
 typedef struct _Env Env;
 
 Env* interp_init();
@@ -17,4 +16,3 @@ int interp_containsSymbol(Env*, char*);
 void interp_runCommand(Env* env, TPA_Instruction* instruction); 
 
 #endif
-

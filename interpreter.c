@@ -1,9 +1,11 @@
 #include "stdlib.h"
 #include "stdio.h"
+#include "string.h"
 #include "interpreter.h"
 #include "function.h"
 #include "ftree.h"
 #include "btable.h"
+#include "file.h"
 #include "globals.h"
 #include "parser/parser.h"
 
@@ -103,6 +105,7 @@ static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
 
 
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
+	char* str;
 	Function* f;
 	FILE* out;
 	#ifdef DEBUG
@@ -125,7 +128,18 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
               fprintf(stderr,"Fonction inconnue\n");
             }
             else {
-							out = stdout; // TODO
+							out = stdout;
+							
+							if(inst->u.print.filename) {
+								str = calloc(strlen(inst->u.print.filename)+1, sizeof(*str));
+								strcpy(str, inst->u.print.filename+1);
+								str[strlen(str)-1] = 0;
+								out = file_fopenOutput(str);
+								if(!out) {
+									printf("Fallback on stdout print.\n");
+									out = stdout;
+								}
+							}
 							
 							switch(inst->u.print.fmt) {
 								case PA_PF_expr:
@@ -152,6 +166,9 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									function_printAsKarnaugh(f, out);
 									break;
 							}
+							
+							if(out!=stdout)
+								fclose(out);
             }
             break;
 				
