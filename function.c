@@ -21,6 +21,10 @@ void function_print(Function *f, FILE* out) {
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->tree));
   if (sfree != 0) free(sfree);
 }
+void function_printAsDNF(Function *f, FILE* out) {
+  fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->fmd));
+  if (sfree != 0) free(sfree);
+}
 void function_printAsTruthTable(Function* f, FILE* out) {
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = btable_toString(f->table));
   if (sfree != 0) free(sfree);
@@ -58,9 +62,9 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree;
   f -> vars = ftree_getVars(tree);
-  f -> fmd = ftree_simplify(ftree_clone(tree));
-  f -> table = ftree_toTruthTable(f->fmd, f->vars);
-  f -> btree = btable_simplify(btable_toBoolTree(f->table, f->vars));
+  f -> table = ftree_toTruthTable(tree, f->vars);
+  f -> fmd = ftree_simplify(btable_toFunctionTree(f->table, f->vars));
+  f -> btree = btree_simplify(btable_toBoolTree(f->table, f->vars));
   return f;
 }
 
@@ -70,7 +74,7 @@ Function* function_createWithTruthTable(TruthTable* table) {
   f -> vars = btable_generateVars(table);
   f -> tree = btable_toFunctionTree(f->table, f->vars);
   f -> fmd = ftree_simplify(ftree_clone(f->tree));
-  f -> btree = btable_toBoolTree(f->table, f->vars);
+  f -> btree = btree_simplify(btable_toBoolTree(f->table, f->vars));
   return f;
 }
 

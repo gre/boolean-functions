@@ -36,7 +36,7 @@ BoolNode* btree_newLeaf(int b) {
 }
 
 
-BoolTree* btable_simplify(BoolTree* tree) {
+BoolTree* btree_simplify(BoolTree* tree) {
   
   return tree;
 }

@@ -155,7 +155,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									break;
 								
 								case PA_PF_disjonctive:
-									
+									function_printAsDNF(f, out);
 									break;
 								
 								case PA_PF_tree:

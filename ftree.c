@@ -212,6 +212,7 @@ TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars) {
 
 FunctionTree* ftree_simplify(FunctionTree* ftree) {
   // TODO
+  
   return ftree;
 }
 
