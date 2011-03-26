@@ -35,9 +35,24 @@ BoolNode* btree_newLeaf(int b) {
   return node;
 }
 
+int btree_equals(BoolNode* a, BoolNode* b) {
+  if(a==0) return (b==0);
+  if(a->left==0) return b->left==0 && a->val == b->val;
+  return btree_equals(a->left, b->left) && btree_equals(a->right, b->right);
+}
+
+BoolNode* rec_btree_simplify(BoolNode* node) {
+  if(node!=0 && node->left!=0) {
+    node->left = rec_btree_simplify(node->left);
+    node->right = rec_btree_simplify(node->right);
+    if(btree_equals(node->left, node->right))
+      return node->left;
+  }
+  return node;
+}
 
 BoolTree* btree_simplify(BoolTree* tree) {
-  
+  tree->root = rec_btree_simplify(tree->root);
   return tree;
 }
 

@@ -15,7 +15,6 @@ struct _Function {
   char* vars; // variables letters in alphabetic order (ex: "abcez")
 };
 
-// TODO : print like this : fname(a,b,c) = a+(b*c)
 char * sfree;
 void function_print(Function *f, FILE* out) {
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->tree));
