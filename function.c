@@ -7,8 +7,8 @@
 #include "ui.h"
 
 struct _Function {
-  FunctionTree* tree;
-  FunctionTree* fmd;
+  FunctionTree* tree; // function tree not simplified
+  FunctionTree* fmd; // Disjunctive normal form of the function (simplified)
   BoolTree* btree;
   TruthTable* table;
   char* symbol;
@@ -33,7 +33,7 @@ void function_printAsBDD(Function* f, FILE* out) {
   btree_printDot(f->btree, out);
 }
 void function_printAsTree(Function* f, FILE* out) {
-  ftree_printDot(f->tree, out);
+  ftree_printDot(f->fmd, out);
 }
 
 void function_printAsKarnaugh(Function* f, FILE* out) {
@@ -59,12 +59,11 @@ void function_setName(Function* f, char* name) {
 
 Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
-  f -> tree = tree;
+  f -> tree = tree; // Init tree with the given expr without simplifications
   f -> vars = ftree_getVars(tree);
   f -> table = ftree_toTruthTable(tree, f->vars);
-  f -> fmd = (btable_toFunctionTree(f->table, f->vars));
   f -> btree = btree_simplify(btable_toBoolTree(f->table, f->vars));
-  // f -> fmd = btree_toFunctionTree(f->btree); // TODO
+  f -> fmd = btree_toFunctionTree(f->btree); // Init fmd as the Disjunctive normal form of the function
   return f;
 }
 
@@ -72,10 +71,9 @@ Function* function_createWithTruthTable(TruthTable* table) {
   Function* f = function_init();
   f -> table = table;
   f -> vars = btable_generateVars(table);
-  f -> tree = btable_toFunctionTree(f->table, f->vars);
-  f -> fmd = (ftree_clone(f->tree));
+  f -> tree = btable_toFunctionTree(f->table, f->vars); // Init tree as a basic truth table traduction
   f -> btree = btree_simplify(btable_toBoolTree(f->table, f->vars));
-  // f -> fmd = btree_toFunctionTree(f->btree); // TODO
+  f -> fmd = btree_toFunctionTree(f->btree); // Init fmd as the Disjunctive normal form of the function
   return f;
 }
 

@@ -57,11 +57,34 @@ BoolTree* btree_simplify(BoolTree* tree) {
   return tree;
 }
 
-FunctionNode* btree_toFunctionNode(BoolNode* node) {
-  // TODO
+FunctionNode* btree_toFunctionNode(BoolNode* node, FunctionNode* conjClause, FunctionNode* root) {
+  if(node==0) return 0;
+  if(node->left==0) {
+    if(node->val==1) { // attach conjonctive clause to root only if leaf is true
+      root = (root==0) ? conjClause : ftree_newBin(root, '+', conjClause);
+    }
+    return root;
+  }
+  FunctionNode *left, *right;
+  left = ftree_newNot(ftree_newVar((char)node->val)); // left is NOT for the current var
+  if(conjClause!=0) {
+    left = ftree_newBin(left, '*', conjClause);
+  }
+  right = ftree_newVar((char)node->val);
+  if(conjClause!=0) {
+    right = ftree_newBin(right, '*', conjClause);
+  }
+  
+  root = btree_toFunctionNode(node->left, left, root);
+  root = btree_toFunctionNode(node->right, right, root);
+  return root;
 }
+
 FunctionTree* btree_toFunctionTree(BoolTree* tree) {
-  // TODO
+  FunctionNode* root = btree_toFunctionNode(tree->root, 0, 0);
+  if(root==0)
+    root = ftree_newBool(1);
+  return ftree_createWithNode(root);
 }
 
 /**
