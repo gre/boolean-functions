@@ -25,8 +25,6 @@ FunctionTree* ftree_createWithNode(FunctionNode* node);
 
 FunctionTree* ftree_clone(FunctionTree* node);
 
-FunctionTree* ftree_fromExpression(char*);
-
 void ftree_free(FunctionTree*);
 
 void ftree_normalize(FunctionTree*);
@@ -45,7 +43,5 @@ FunctionNode* ftree_newBool(int b);
 FunctionNode* ftree_newVar(char s);
 FunctionTree* ftree_createWithNode(FunctionNode* node);
 
-
-FunctionTree* ftree_simplify(FunctionTree* ftree);
 #endif
 
