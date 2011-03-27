@@ -108,7 +108,7 @@ FunctionTree* btable_toFunctionTree(TruthTable* table, char* vars) {
 
 static BoolNode* rec_btable_toBoolTree(TruthTable* table, int i, char* vars) {
   if(vars[0]==0) return btree_newLeaf(table->tab[i]);
-  return btree_newNode(rec_btable_toBoolTree(table, i<<1 & 0x0, vars+1), *vars,
+  return btree_newNode(rec_btable_toBoolTree(table, i<<1, vars+1), *vars,
                        rec_btable_toBoolTree(table, i<<1 | 0x1, vars+1));
 }
 
