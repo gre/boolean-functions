@@ -77,6 +77,10 @@ Function* function_createWithTruthTable(TruthTable* table) {
   return f;
 }
 
+Bool function_eval(Function* f, Point p) {
+  return btable_getVal(f->table, point_toIndex(p));
+}
+
 int function_is(Function* f, char* name) {
   return strcmp(f->symbol, name)==0;
 }

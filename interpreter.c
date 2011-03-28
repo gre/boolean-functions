@@ -1,6 +1,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "point.h"
 #include "interpreter.h"
 #include "function.h"
 #include "ftree.h"
@@ -20,7 +21,7 @@ struct _Env {
   int nbpoints;
 };
 
-typedef enum { TPA_UNDEF=0, TPA_VALUE, TPA_VARIABLE, TPA_OPERATOR } TPA_Type;
+typedef enum { TPA_UNDEF=0, TPA_VALUE, TPA_VARIABLE, TPA_OPERATOR, TPA_CALL } TPA_Type;
 
 struct _TPA_Expr {
     /* 
@@ -32,6 +33,9 @@ struct _TPA_Expr {
     TPA_Type type; // 
     TPA_Expr *left; // also used for NOT
     TPA_Expr *right; // = 0 for NOT
+    
+    char* call;
+    Point point;
 };
 
 Env* interp_init() {
@@ -70,27 +74,28 @@ Function* interp_getFunctionByName(Env* env, char* name) {
   return 0;
 }
 
-static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr) {
-	#ifdef TRACE
-	if(expr->type==TPA_VARIABLE)
-		printf("DEBUG: node var TPA_Expr(%p) = type:%d, var:%c\n", expr, expr->type, (char)expr->val);
-	else if(expr->type==TPA_OPERATOR)
-		printf("DEBUG: node op  TPA_Expr(%p) = type:%d, op: %c, left:%p, right:%p.\n", expr, expr->type, (char)expr->val, expr->left, expr->right);
-	else if(expr->type==TPA_VALUE)
-		printf("DEBUG: node val TPA_Expr(%p) = type:%d, val:%d.\n", expr, expr->type, expr->val);
-	#endif
+static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr, Env* env) {
     if(expr==0 || expr->type==TPA_UNDEF) return 0;
     if(expr->type==TPA_VALUE) return ftree_newBool(expr->val==1);
     if(expr->type==TPA_VARIABLE) return ftree_newVar((char)expr->val);
     if(expr->type==TPA_OPERATOR) {
-      return (expr->val=='!') ? ftree_newNot(TPAExpr_toFunctionNode(expr->left))
-      : ftree_newBin(TPAExpr_toFunctionNode(expr->left), expr->val, TPAExpr_toFunctionNode(expr->right));
+      return (expr->val=='!') ? ftree_newNot(TPAExpr_toFunctionNode(expr->left, env))
+      : ftree_newBin(TPAExpr_toFunctionNode(expr->left, env), expr->val, TPAExpr_toFunctionNode(expr->right, env));
 		}
+    if(expr->type==TPA_CALL) {
+      Function * f = interp_getFunctionByName(env, expr->call);
+      if(f==0) {
+        printf("Warning: no function was found for name: '%s'. Assuming false node.\n", expr->call);
+        return ftree_newBool(0);
+      }
+      Bool b = function_eval(f, expr->point);
+      return ftree_newBool(function_eval(f, expr->point));
+    }
 		return 0;
 }
 
-static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr) {
-    return ftree_createWithNode(TPAExpr_toFunctionNode(expr));
+static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr, Env* env) {
+    return ftree_createWithNode(TPAExpr_toFunctionNode(expr, env));
 }
 
 static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
@@ -103,6 +108,16 @@ static TruthTable* TPAExpr_toTruthTable(TPA_Expr** expr) {
 		return table;
 }
 
+static Point TPAExpr_toPoint(TPA_Expr** expr) {
+    int size, i;
+    for(size=0; expr[size]!=0; ++size);
+    Bool* vals = malloc(size*sizeof(Bool));
+    for(i=0; i<size; ++i) {
+      vals[i] = expr[i]->val;
+    }
+    return point_create(vals, size);
+}
+
 
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	char* str;
@@ -113,7 +128,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	#endif
 	switch(inst->kind) {
         case PA_IK_Expr:
-            f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr));
+            f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr, env));
             addFunction(env, inst->u.expr.name, f);
             break;
         
@@ -184,6 +199,7 @@ TPA_Expr* tpa_init() {
     t -> type = TPA_UNDEF;
     t -> right = 0;
     t -> left = 0;
+    t -> call = 0;
     return t;
 }
 
@@ -209,9 +225,14 @@ extern TPA_Expr* pa_newNot(TPA_Expr*e) {
     return t;  
 }
 
-extern TPA_Expr* pa_newCall(char*s, TPA_Expr** t) {
-    printf("pa_newCall not implemented yet!!!\n");
-    return (TPA_Expr*) (0x123456); // TODO
+extern TPA_Expr* pa_newCall(char* s, TPA_Expr** params) {
+    TPA_Expr* t = tpa_init();
+    char* cpy = malloc( (strlen(s)+1)*sizeof(char) );
+    strcpy(cpy, s);
+    t -> type = TPA_CALL;
+    t -> call = cpy;
+    t -> point = TPAExpr_toPoint(params);
+    return t;
 }
 
 extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { 
