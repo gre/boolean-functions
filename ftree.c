@@ -98,8 +98,12 @@ char ftree_operatorToChar(int val) {
 }
 
 static char* rec_ftree_toString(FunctionNode* tree) {
-  if(tree==0) return "";
   char *sleft, *sright, *sret, op;
+  if(tree==0) {
+    sret = malloc(sizeof(char));
+    *sret = 0;
+    return sret;
+  }
   int size;
   if ( tree -> type == NodeType_OPERATOR) {
     sleft = rec_ftree_toString( tree -> left );
@@ -129,7 +133,9 @@ static char* rec_ftree_toString(FunctionNode* tree) {
     snprintf(sret, 2, "%1d", tree -> val);
     return sret;
   }
-  return "";
+  sret = malloc(sizeof(char));
+  *sret = 0;
+  return sret;
 }
 
 char* ftree_toString(FunctionTree* tree) {
