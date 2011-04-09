@@ -2,13 +2,33 @@
 #define _POINTS_H
 
 #include "point.h"
+#include "parser/parser.h"
+#include "globals.h"
+
+/**
+ * A Set of points
+ */
+struct _Points {
+  PointItem* point; // Very first point
+  char* symbol;
+};
 
 typedef struct _Points Points;
 
 Points* points_init();
 void points_free(Points*);
 
-void points_print(Points*); // Must use point_print foreach point
+char * points_toString(Points*); // Must use point_print foreach point
+void points_print(Points* points, FILE* out);
+
+/** Get Points corresponding to this name
+* @param char* name
+* @return If no Points is found, 0 is returned
+**/
+Points* points_get(char* name);
+int points_is(Points* p, char* name);
+void points_setName(Points* p, char* name);
+void points_doOperation(Points* points, char* name, char ope, TPA_Expr** vals);
 
 Points* points_parse(char*);
 void points_free(Points* set);
@@ -28,18 +48,19 @@ int points_getDim(Points*);
 int points_addAll(Points* set, Points* all);
 
 /**
- * Remove all points in all into set
- */
-int points_removeAll(Points* set, Points* all);
-
-/**
+ *
  * Check if :
  * - point doesn't exists
  * - If set contains a point, p is same dimension as this point
  */
-int points_add(Points* set, Point p);
+ void points_add(Points* points, Point point);
 
-int points_remove(Points* set, Point p);
+/**
+ * Remove all points in all into set
+ */
+int points_removeAll(Points* set, Points* all);
+
+void points_remove(Points* set, Point p);
 
 int points_getSize(Points* set);
 

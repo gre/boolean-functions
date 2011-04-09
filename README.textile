@@ -1,3 +1,4 @@
 This is a commandline interpreter for boolean functions. It's an university project written in C.
 
 Gaetan Renaudeau et Nicolae Namolovan - 2011 - All right reserved, until the end of the project.
+

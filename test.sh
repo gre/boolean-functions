@@ -7,22 +7,21 @@ expect "Boolean Functions interpeter"
 send "expr funct = (x*y)+!a\r"
 
 send "print /e funct\r"
-expect "funct = ((x*y)+!a)"
+expect "funct(axy) = ((x*y)+!a)"
 
 # Table verite
 send "print /t funct\r"
-expect "funct = (11110001)"
+expect "funct(axy) = (11110001)"
 
 # Dot
 send "print /a funct\r"
 # Don't know how to escape, so some very basic expectation
 expect "label"
-expect "n6 *"
 
 # test table and same funct name collision
 send "table funct = (0001)\r"
 send "print /e funct\r"
-expect "funct = (b*a)"
+expect "funct(ab) = (b*a)"
 
 send "table funct = (11110010)\r"
 send "print /d funct\r"
@@ -38,6 +37,7 @@ send "expr ff' = xor(01)*a\r"
 send "print /d ff'\r"
 expect "ff'(a) = a"
 
+send "point ident = (111)\r"
 
 interact
 

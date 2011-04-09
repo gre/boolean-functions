@@ -8,6 +8,12 @@ typedef struct _Point {
   int dim;
 } Point;
 
+typedef struct _PointItem {
+  Point p;
+  struct _PointItem* next;
+} PointItem;
+
+Point point_init(int dim);
 Point point_create(Bool* vals, int dim);
 Point point_createWithIndex(int index, int dim);
 int point_toIndex(Point p);

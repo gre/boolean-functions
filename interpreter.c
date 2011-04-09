@@ -8,15 +8,17 @@
 #include "btable.h"
 #include "file.h"
 #include "globals.h"
+#include "point.h"
+#include "points.h"
 #include "parser/parser.h"
 
 struct _Env {
   // ...
-  
+
   // Symbols
   Function* functions[100]; // TODO dynamic
   int nbfunction;
-  
+
   Points* points[100]; // TODO dynamic
   int nbpoints;
 };
@@ -24,16 +26,16 @@ struct _Env {
 typedef enum { TPA_UNDEF=0, TPA_VALUE, TPA_VARIABLE, TPA_OPERATOR, TPA_CALL } TPA_Type;
 
 struct _TPA_Expr {
-    /* 
-     * value: boolean=0 ou 1, = -1 pour wildcard 
+    /*
+     * value: boolean=0 ou 1, = -1 pour wildcard
      * variable: num of the variable
      * operator: ('+', '*', '^', '!')
      */
-    int val; 
-    TPA_Type type; // 
+    int val;
+    TPA_Type type; //
     TPA_Expr *left; // also used for NOT
     TPA_Expr *right; // = 0 for NOT
-    
+
     char* call;
     Point point;
 };
@@ -60,17 +62,25 @@ static void addFunction(Env* env, char* name, Function* f) {
     env -> functions[env -> nbfunction ++] = f;
 }
 
-static void addPoint(Env* env, char* name, Points* p) {
-    // todo : points_setName
-    // todo : replace if name exists ( like addFunction() bellow )
-    env -> points[env -> nbpoints ++] = p;
+static void addPoints(Env* env, char* name, Points* p) {
+    points_setName(p, name);
+    env->points[env->nbpoints++] = p;
 }
+
 
 Function* interp_getFunctionByName(Env* env, char* name) {
   int i;
   for(i=0; i<env->nbfunction; ++i)
     if(function_is(env->functions[i], name))
       return env->functions[i];
+  return 0;
+}
+
+Points* interp_getPointsByName(Env* env, char* name) {
+  int i;
+  for(i=0; i<env->nbpoints; ++i)
+    if(points_is(env->points[i], name))
+      return env->points[i];
   return 0;
 }
 
@@ -88,10 +98,9 @@ static FunctionNode* TPAExpr_toFunctionNode(TPA_Expr* expr, Env* env) {
         printf("Warning: no function was found for name: '%s'. Assuming false node.\n", expr->call);
         return ftree_newBool(0);
       }
-      Bool b = function_eval(f, expr->point);
       return ftree_newBool(function_eval(f, expr->point));
     }
-		return 0;
+    return 0;
 }
 
 static FunctionTree* TPAExpr_toFunctionTree(TPA_Expr* expr, Env* env) {
@@ -122,6 +131,7 @@ static Point TPAExpr_toPoint(TPA_Expr** expr) {
 void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	char* str;
 	Function* f;
+	Points* points;
 	FILE* out;
 	#ifdef DEBUG
 	//printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
@@ -131,12 +141,12 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
             f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr, env));
             addFunction(env, inst->u.expr.name, f);
             break;
-        
+
 				case PA_IK_Table:
 					f = function_createWithTruthTable(TPAExpr_toTruthTable(inst->u.table.vals));
 					addFunction(env, inst->u.table.name, f);
 					break;
-				
+
         case PA_IK_Print:
             f = interp_getFunctionByName(env, inst->u.print.name);
             if(f==0) {
@@ -144,7 +154,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
             }
             else {
 							out = stdout;
-							
+
 							if(inst->u.print.filename) {
 								str = calloc(strlen(inst->u.print.filename)+1, sizeof(*str));
 								strcpy(str, inst->u.print.filename+1);
@@ -155,38 +165,53 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									out = stdout;
 								}
 							}
-							
+
 							switch(inst->u.print.fmt) {
 								case PA_PF_expr:
 									function_print(f, out);
 									break;
-								
+
 								case PA_PF_bdd:
 									function_printAsBDD(f, out);
 									break;
-								
+
 								case PA_PF_table:
 									function_printAsTruthTable(f, out);
 									break;
-								
+
 								case PA_PF_disjonctive:
 									function_printAsDNF(f, out);
 									break;
-								
+
 								case PA_PF_tree:
 									function_printAsTree(f, out);
 									break;
-								
+
 								case PA_PF_karnaugh:
 									function_printAsKarnaugh(f, out);
 									break;
 							}
-							
+
 							if(out!=stdout)
 								fclose(out);
             }
             break;
-				
+        case PA_IK_Point:
+                // u.print.name - point name
+                // u->u.point:
+                // char*      name; // nom de l'ensemble
+                // char       ope;  // operateur: '=':= ; '+':+= ; '-':-=
+                // TPA_Expr** vals; // les valeurs du point:
+                points = interp_getPointsByName(env,inst->u.point.name);
+                if (points == 0) {
+                    points = points_init();
+                    addPoints(env, inst->u.expr.name, points);
+                }
+                interp_pointsOperation(points,inst->u.point.name,inst->u.point.ope,inst->u.point.vals);
+
+                out = stdout;
+                points_print(points, out);
+                break;
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;
@@ -203,10 +228,13 @@ TPA_Expr* tpa_init() {
     return t;
 }
 
-extern TPA_Expr* pa_newBool(int b) { 
+extern TPA_Expr* pa_newBool(int b) {
     TPA_Expr* t = tpa_init();
     t -> val = b;
     t -> type = TPA_VALUE;
+    #ifdef TRACE
+    printf("newBool val: %d type:TPA_VALUE \n", b);
+    #endif
     return t;
 }
 
@@ -222,7 +250,7 @@ extern TPA_Expr* pa_newNot(TPA_Expr*e) {
     t -> val = '!';
     t -> type = TPA_OPERATOR;
     t -> left = e;
-    return t;  
+    return t;
 }
 
 extern TPA_Expr* pa_newCall(char* s, TPA_Expr** params) {
@@ -235,7 +263,7 @@ extern TPA_Expr* pa_newCall(char* s, TPA_Expr** params) {
     return t;
 }
 
-extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) { 
+extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) {
     TPA_Expr* t = tpa_init();
     t -> left = l;
     t -> right = r;
@@ -244,9 +272,49 @@ extern TPA_Expr* pa_newBin(TPA_Expr*l, char o, TPA_Expr*r) {
     return t;
 }
 
-extern TPA_Expr* pa_newWildcard() { 
+extern TPA_Expr* pa_newWildcard() {
     TPA_Expr* t = tpa_init();
     t -> val = -1;
     t -> type = TPA_VALUE;
     return t;
+}
+
+/**
+* Handle operation on a point
+* @param char* name points name
+* @param char ope operateur: '=':= ; '+':+= ; '-':-=
+* @param TPA_Expr** vals
+**/
+void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals) {
+    Point point;
+    int i, size;
+    TPA_Expr ** val;
+
+    val = vals;
+    size = 0;
+
+    // Calculate the size of our point vector
+    while(*val != 0) {
+        size++;
+        printf("Point val: %d\n", (**val).val);
+        val++;
+    }
+
+    point = point_init(size);
+
+    for(i=0; i<size; i++)
+        point.vect[i] = (char)(*vals[i]).val; // int that can contain 0,1,-1 (wildcard)
+
+    switch(ope) {
+        case '=':
+            // Todo overwrite
+            points_add(points, point);
+            break;
+        case '+':
+            points_add(points, point);
+            break;
+        case '-':
+            points_remove(points, point);
+            break;
+    }
 }

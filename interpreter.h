@@ -13,6 +13,8 @@ void interp_free(Env*);
 
 int interp_containsSymbol(Env*, char*);
 
-void interp_runCommand(Env* env, TPA_Instruction* instruction); 
+void interp_runCommand(Env* env, TPA_Instruction* instruction);
+
+void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals);
 
 #endif

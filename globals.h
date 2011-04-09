@@ -8,7 +8,7 @@
 
 #define VARIABLE_SIZE 26
 
-typedef unsigned char Bool;
+typedef char Bool;
 
 #endif
 
