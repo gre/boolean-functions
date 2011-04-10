@@ -20,6 +20,7 @@ void points_free(Points*);
 
 char * points_toString(Points*); // Must use point_print foreach point
 void points_print(Points* points, FILE* out);
+int points_contains(Points* set, Point p);
 
 /** Get Points corresponding to this name
 * @param char* name
@@ -28,12 +29,9 @@ void points_print(Points* points, FILE* out);
 Points* points_get(char* name);
 int points_is(Points* p, char* name);
 void points_setName(Points* p, char* name);
-void points_doOperation(Points* points, char* name, char ope, TPA_Expr** vals);
 
 Points* points_parse(char*);
 void points_free(Points* set);
-
-int points_contains(Points* set, Point p);
 
 char* points_getSymbol(Points*); // Get the name identifier of the points
 

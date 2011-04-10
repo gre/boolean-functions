@@ -25,8 +25,8 @@ Points* points_init() {
 PointItem* points_itemInit(Point point) {
     PointItem* pointItem = malloc(sizeof(*pointItem));
     pointItem->next = 0;
-    pointItem->p = point;
-
+    
+    pointItem->p = point_dup(point);
     return pointItem;
 }
 
@@ -71,15 +71,17 @@ void points_add(Points* points, Point point) {
     int i;
     PointItem* pointItem;
     PointItem* nextPointItem;
-    Point* newPoint;
 
     for(i=0; i<point.dim; i++) {
         if (point.vect[i] == -1) { // Verify for wildcard chars
 
-            point.vect[i] = 0;
-            points_add(points, point);
+			point = point_dup(point);
 
             point.vect[i] = 1;
+            points_add(points, point);
+            
+			point = point_dup(point);            
+            point.vect[i] = 0;
             points_add(points, point);
 
             return; // We won't store wild things
@@ -100,11 +102,63 @@ void points_add(Points* points, Point point) {
 }
 
 int points_contains(Points* set, Point p) {
+	PointItem* pointItem;
+
+	if (set->point == 0) return 0;
+    
+    pointItem = set->point;
+	do {
+		if (point_equals(pointItem->p, p)) return 1;
+		pointItem = pointItem->next;
+	} while ( (pointItem = pointItem->next) );
+	
     return 0;
 }
 
-
 void points_remove(Points* set, Point p) {
+	PointItem* pointItem, *previousPoint = 0;
+
     if (!points_contains(set,p)) return;
+        
+    int size = points_getSize(set);
+    
+    pointItem = set->point;
+	do {
+		if (point_equals(pointItem->p, p)) {
+			if (previousPoint == 0) { 
+				if (size == 1)
+					set->point = 0;
+				else
+					set->point = pointItem->next;
+			}
+			else {	
+				if (pointItem->next != 0) {
+					previousPoint->next = pointItem->next;
+				} else {
+					previousPoint->next = 0;
+				}
+			}
+			break;
+		}
+		previousPoint = pointItem;
+	} while ( (pointItem = pointItem->next) );
+    
     return;
+}
+
+int points_getSize(Points* set) {
+	int size=0;
+	PointItem* pointItem;
+	
+    if (set->point == 0) return 0;
+    
+    size = 1;
+    
+	pointItem = set->point;
+	while (pointItem->next != 0) {
+		pointItem = pointItem->next;
+		size++;
+	}
+
+	return size;
 }

@@ -14,6 +14,7 @@ typedef struct _PointItem {
 } PointItem;
 
 Point point_init(int dim);
+Point point_dup(Point src);
 Point point_create(Bool* vals, int dim);
 Point point_createWithIndex(int index, int dim);
 int point_toIndex(Point p);

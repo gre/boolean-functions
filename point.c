@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "point.h"
 #include "globals.h"
 
@@ -8,6 +9,13 @@ Point point_init(int dim) {
   p.dim = dim;
   p.vect = (Bool*)calloc(dim, sizeof(Bool));
   return p;
+}
+
+Point point_dup(Point src) {
+	Point p;
+	p = point_init(src.dim);
+	memcpy(p.vect,src.vect,sizeof(Bool)*src.dim);
+	return p;
 }
 
 int point_toIndex(Point p) {
