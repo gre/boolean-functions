@@ -71,10 +71,12 @@ void points_add(Points* points, Point point) {
     int i;
     PointItem* pointItem;
     PointItem* nextPointItem;
+    Point pointOrig;
 
     for(i=0; i<point.dim; i++) {
         if (point.vect[i] == -1) { // Verify for wildcard chars
-
+			pointOrig = point;
+			
 			point = point_dup(point);
 
             point.vect[i] = 1;
@@ -83,7 +85,7 @@ void points_add(Points* points, Point point) {
 			point = point_dup(point);            
             point.vect[i] = 0;
             points_add(points, point);
-
+			
             return; // We won't store wild things
         }
     }
@@ -161,4 +163,19 @@ int points_getSize(Points* set) {
 	}
 
 	return size;
+}
+
+void points_free(Points* set) {
+	PointItem* pointItem, *pointItemPrev;
+	
+    if (set->point == 0) return;
+        
+	pointItem = set->point;
+	while (pointItem->next != 0) {
+		point_free(pointItem->p);
+		pointItemPrev = pointItem;
+		pointItem = pointItem->next;
+		free(pointItemPrev);
+	}
+	set->point = 0;
 }

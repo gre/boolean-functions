@@ -18,6 +18,10 @@ Point point_dup(Point src) {
 	return p;
 }
 
+void point_free(Point p) {
+	free(p.vect);
+}
+
 int point_toIndex(Point p) {
   int index=0, i;
   int pow = 1;
