@@ -67,29 +67,34 @@ void points_print(Points* points, FILE* out) {
     if (sfree != 0) free(sfree);
 }
 
-void points_add(Points* points, Point point) {
-    int i;
-    PointItem* pointItem;
-    PointItem* nextPointItem;
-    Point pointOrig;
-
+void points_wildOp(Points* points, Point point, char op) {
+	int i;
+	
     for(i=0; i<point.dim; i++) {
         if (point.vect[i] == -1) { // Verify for wildcard chars
-			pointOrig = point;
-			
 			point = point_dup(point);
-
+			
             point.vect[i] = 1;
-            points_add(points, point);
+            points_wildOp(points, point, op);
             
 			point = point_dup(point);            
             point.vect[i] = 0;
-            points_add(points, point);
-			
+            points_wildOp(points, point, op);
+            
             return; // We won't store wild things
         }
     }
+	if (op == '+') points_add(points, point);
+	else points_remove(points, point);
+	
+}
 
+void points_add(Points* points, Point point) {
+    PointItem* pointItem;
+    PointItem* nextPointItem;
+
+    if (points_contains(points,point)) return;
+	
     nextPointItem = points_itemInit(point);
 
     if (points->point == 0) {
@@ -103,37 +108,36 @@ void points_add(Points* points, Point point) {
     }
 }
 
-int points_contains(Points* set, Point p) {
+int points_contains(Points* points, Point point) {
 	PointItem* pointItem;
 
-	if (set->point == 0) return 0;
+	if (points->point == 0) return 0;
     
-    pointItem = set->point;
+    pointItem = points->point;
 	do {
-		if (point_equals(pointItem->p, p)) return 1;
-		pointItem = pointItem->next;
+		if (point_equals(pointItem->p, point)) return 1;
 	} while ( (pointItem = pointItem->next) );
 	
     return 0;
 }
 
-void points_remove(Points* set, Point p) {
+void points_remove(Points* points, Point point) {
 	PointItem* pointItem, *previousPoint = 0;
 
-    if (!points_contains(set,p)) return;
+    if (!points_contains(points,point)) return;
         
-    int size = points_getSize(set);
+    int size = points_getSize(points);
     
-    pointItem = set->point;
+    pointItem = points->point;
 	do {
-		if (point_equals(pointItem->p, p)) {
+		if (point_equals(pointItem->p, point)) {
 			if (previousPoint == 0) { 
 				if (size == 1)
-					set->point = 0;
+					points->point = 0;
 				else
-					set->point = pointItem->next;
+					points->point = pointItem->next;
 			}
-			else {	
+			else {
 				if (pointItem->next != 0) {
 					previousPoint->next = pointItem->next;
 				} else {

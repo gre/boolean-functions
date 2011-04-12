@@ -20,7 +20,7 @@ void points_free(Points*);
 
 char * points_toString(Points*); // Must use point_print foreach point
 void points_print(Points* points, FILE* out);
-int points_contains(Points* set, Point p);
+int points_contains(Points* points, Point point);
 
 /** Get Points corresponding to this name
 * @param char* name
@@ -46,6 +46,12 @@ int points_getDim(Points*);
 int points_addAll(Points* set, Points* all);
 
 /**
+ * Will expend *
+ * If op == + it  will call points_add else points_remove
+ */
+void points_wildOp(Points* points, Point point, char op);
+
+/**
  *
  * Check if :
  * - point doesn't exists
@@ -58,7 +64,7 @@ int points_addAll(Points* set, Points* all);
  */
 int points_removeAll(Points* set, Points* all);
 
-void points_remove(Points* set, Point p);
+void points_remove(Points* points, Point point);
 
 int points_getSize(Points* set);
 

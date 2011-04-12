@@ -308,13 +308,13 @@ void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** val
     switch(ope) {
         case '=':
             points_free(points);
-            points_add(points, point);
+            points_wildOp(points, point, '+');
             break;
         case '+':
-            points_add(points, point);
+            points_wildOp(points, point, ope);
             break;
         case '-':
-            points_remove(points, point);
+            points_wildOp(points, point, ope);
             break;
     }
 }
