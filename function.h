@@ -39,12 +39,16 @@ void function_printAsTruthTable(Function*, FILE* out); // Must use btable_toStri
 
 void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_toStringKarnaugh
 
+void function_printEvalPoint(Function* f, Point p, FILE* out);
+
 Bool function_eval(Function*, Point); // Must use btable_getPointVal
 
 int function_is(Function* f, char* name);
 
 // shortcut to btable_equals
 int function_equals(Function*, Function*);
+
+int function_varsLength(Function* f);
 
 #endif
 

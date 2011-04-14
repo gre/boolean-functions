@@ -132,10 +132,12 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	char* str;
 	Function* f;
 	Points* points;
+	PointItem* pointItem;
 	FILE* out;
 	#ifdef DEBUG
 	//printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
 	#endif
+	out = stdout;
 	switch(inst->kind) {
         case PA_IK_Expr:
             f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr, env));
@@ -207,11 +209,49 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
                     points = points_init();
                     addPoints(env, inst->u.expr.name, points);
                 }
-                interp_pointsOperation(points,inst->u.point.name,inst->u.point.ope,inst->u.point.vals);
-
-                out = stdout;
-                points_print(points, out);
+                if (interp_pointsOperation(points,inst->u.point.name,inst->u.point.ope,inst->u.point.vals) == 0)
+                	fprintf(stderr, "La taille de point est incompatible avec l'ensamble\n");
+				else 
+	                points_print(points, out);
                 break;
+        case PA_IK_EvalEns:
+        		
+                points = interp_getPointsByName(env,inst->u.evalens.ens);
+                if (points == 0) {
+                	fprintf(stderr, "Ensamble des points inconnue\n");
+                	break;
+				}
+				pointItem = points->point;
+				if (pointItem == 0) {
+					fprintf(stderr, "L'ensamble des points est vide\n");
+					break;
+				}
+				
+				f = interp_getFunctionByName(env, inst->u.evalens.name);
+				if (f == 0) {
+					fprintf(stderr,"Fonction inconnue\n");
+				  	break;
+				}
+				
+				if (points_pointDim(points) != function_varsLength(f)) {
+					fprintf(stderr,"Point vector dim and function vars number mismatch.\n");
+				  	break;					
+				}
+								
+				do {
+					function_printEvalPoint(f,pointItem->p,out);					
+					pointItem = pointItem->next;
+				} while (pointItem != 0);
+
+				//function_eval();
+                /*fprintf(stderr,"  eval fct=%s ens=%s\n",
+                    inst.u.evalens.name,
+                    inst.u.evalens.ens);*/
+                break;
+	 /* case PA_IK_EvalPoint:
+				fprintf(stderr,"  eval fct=%s point=%p\n",
+					inst.u.evalpoint.name,
+					inst.u.evalpoint.vals);*/
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;
@@ -285,7 +325,7 @@ extern TPA_Expr* pa_newWildcard() {
 * @param char ope operateur: '=':= ; '+':+= ; '-':-=
 * @param TPA_Expr** vals
 **/
-void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals) {
+int interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals) {
     Point point;
     int i, size;
     TPA_Expr ** val;
@@ -296,7 +336,6 @@ void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** val
     // Calculate the size of our point vector
     while(*val != 0) {
         size++;
-        printf("Point val: %d\n", (**val).val);
         val++;
     }
 
@@ -311,10 +350,13 @@ void interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** val
             points_wildOp(points, point, '+');
             break;
         case '+':
+        	if (!points_fit(points, point)) return 0;
             points_wildOp(points, point, ope);
             break;
         case '-':
+        	if (!points_fit(points, point)) return 0;
             points_wildOp(points, point, ope);
             break;
     }
+    return 1;
 }

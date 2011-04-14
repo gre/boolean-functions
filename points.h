@@ -73,5 +73,11 @@ int points_getSize(Points* set);
  */
 Point* points_toArray(Points* set, int* size);
 
+/**
+ * Check if point fit the points (have the size of the points)
+ */
+int points_fit(Points* points, Point point);
+int points_pointDim(Points* points);
+
 #endif
 

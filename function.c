@@ -15,6 +15,10 @@ struct _Function {
   char* vars; // variables letters in alphabetic order (ex: "abcez")
 };
 
+int function_varsLength(Function* f) {
+	return strlen(f->vars);
+}
+
 char * sfree;
 void function_print(Function *f, FILE* out) {
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->tree));
@@ -26,6 +30,11 @@ void function_printAsDNF(Function *f, FILE* out) {
 }
 void function_printAsTruthTable(Function* f, FILE* out) {
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = btable_toString(f->table));
+  if (sfree != 0) free(sfree);
+}
+
+void function_printEvalPoint(Function* f, Point p, FILE* out) {
+  fprintf(out, "%s(%s) = %d\n", f->symbol, sfree = point_toString(p), function_eval(f,p) );
   if (sfree != 0) free(sfree);
 }
 

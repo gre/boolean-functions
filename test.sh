@@ -37,7 +37,10 @@ send "expr ff' = xor(01)*a\r"
 send "print /d ff'\r"
 expect "ff'(a) = a"
 
-send "point ident = (111)\r"
+send "expr fun = a*b+c\r"
+send "point ident = (***)\r"
+send "eval fun ident"
+expect "fun((0,1,1)) = 1"
 
 interact
 

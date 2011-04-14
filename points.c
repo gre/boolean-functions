@@ -89,12 +89,26 @@ void points_wildOp(Points* points, Point point, char op) {
 	
 }
 
+int points_fit(Points* points, Point point) {
+	if (points_pointDim(points) == point.dim)
+		return 1;
+	
+	return 0;
+}
+
+int points_pointDim(Points* points) {    
+	if (points->point == 0)
+		return 0;
+
+	return points->point->p.dim;	
+}
+
 void points_add(Points* points, Point point) {
     PointItem* pointItem;
     PointItem* nextPointItem;
 
     if (points_contains(points,point)) return;
-	
+    	
     nextPointItem = points_itemInit(point);
 
     if (points->point == 0) {
@@ -183,3 +197,9 @@ void points_free(Points* set) {
 	}
 	set->point = 0;
 }
+
+
+
+// function_eval Bool function_eval(Function*, Point); // Must use btable_getPointVal
+
+
