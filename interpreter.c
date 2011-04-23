@@ -299,7 +299,7 @@ extern TPA_Expr* pa_newCall(char* s, TPA_Expr** params) {
     strcpy(cpy, s);
     t -> type = TPA_CALL;
     t -> call = cpy;
-    t -> point = TPAExpr_toPoint(params);
+    t -> point = (params==0) ? point_init(0) : TPAExpr_toPoint(params);
     return t;
 }
 

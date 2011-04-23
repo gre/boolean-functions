@@ -37,6 +37,7 @@ BoolNode* btree_newLeaf(int b) {
 
 int btree_equals(BoolNode* a, BoolNode* b) {
   if(a==0) return (b==0);
+  if(b==0) return FALSE;
   if(a->left==0) return b!=0 && b->left==0 && a->val == b->val;
   return btree_equals(a->left, b->left) && btree_equals(a->right, b->right);
 }

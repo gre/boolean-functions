@@ -7,7 +7,7 @@
 Point point_init(int dim) {
   Point p;
   p.dim = dim;
-  p.vect = (Bool*)calloc(dim, sizeof(Bool));
+  p.vect = dim==0 ? 0 : (Bool*)calloc(dim, sizeof(Bool));
   return p;
 }
 
