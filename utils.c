@@ -37,3 +37,15 @@ extern char* str_trim(char *s) {
     last[1] = '\0';
     return newString;
 }
+
+extern char* str_strips(char *s, char *cs) {
+	char *r;
+	int i = -1, j = 0;
+	r = calloc(strlen(s)+1, sizeof(char));
+	while (s[++i]) {
+		if (index(cs, s[i]) != NULL) continue;
+		r[j++] = s[i];
+	}
+	r[j] = '\0';
+	return r;	
+}

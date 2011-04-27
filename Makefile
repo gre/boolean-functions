@@ -29,7 +29,7 @@ btable.o: btable.c btable.h point.o ftree.o btree.o
 ftree.o: ftree.c ftree.h point.o btree.o
 	gcc -c ftree.c -o $@ $(OPT)
   
-function.o: function.c function.h ftree.o btable.o btree.o
+function.o: function.c function.h ftree.o btable.o btree.o utils.o
 	gcc -c function.c -o $@ $(OPT)
 
 interpreter.o : interpreter.c interpreter.h function.o ftree.o btable.o parser/parser.tab.o file.o

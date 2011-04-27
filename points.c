@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <math.h>
 #include "points.h"
 #include "point.h"
 
@@ -74,11 +74,11 @@ void points_wildOp(Points* points, Point point, char op) {
         if (point.vect[i] == -1) { // Verify for wildcard chars
 			point = point_dup(point);
 			
-            point.vect[i] = 1;
+            point.vect[i] = 0;
             points_wildOp(points, point, op);
             
 			point = point_dup(point);            
-            point.vect[i] = 0;
+            point.vect[i] = 1;
             points_wildOp(points, point, op);
             
             return; // We won't store wild things
@@ -114,10 +114,7 @@ void points_add(Points* points, Point point) {
     if (points->point == 0) {
         points->point = nextPointItem;
     } else {
-        pointItem = points->point;
-        while (pointItem->next != 0)
-            pointItem = pointItem->next;
-
+    	pointItem = points_getLastPoint(points);
         pointItem->next = nextPointItem;
     }
 }
@@ -198,8 +195,80 @@ void points_free(Points* set) {
 	set->point = 0;
 }
 
+PointItem* points_getLastPoint(Points* points) {
+	PointItem *pointItem;
+	pointItem = points->point;
+	while (pointItem->next != 0)	
+		pointItem = pointItem->next;
+	return pointItem;
+}
 
+Points* points_grayCode(int n) {
+	Bool b;
+	
+	Points* points, * subPoints;
+	PointItem* pointItem, *pointItemLast;
+	PointItem* mirrorItemFirst, * mirrorItem, * mirrorItemTemp;
 
-// function_eval Bool function_eval(Function*, Point); // Must use btable_getPointVal
+	Point point;
+	points = points_init();
 
+	if (n == 1) {
+		b = 0;
+		point.vect = &b;
+		point.dim = 1;
+		points_add(points,point);
 
+		b = 1;
+		point.vect = &b;
+		points_add(points,point);
+
+		return points;
+	}
+	subPoints = points_grayCode(n-1);
+	pointItemLast = points_getLastPoint(subPoints);
+	
+	/**
+	 * Algo:
+	 * Mirror the points.
+	 * Original points vectors prepend with 0, the mirror with 1.
+	 */
+
+	mirrorItemFirst = points_itemInit(subPoints->point->p);
+
+	pointItem = subPoints->point;		
+	mirrorItem = mirrorItemFirst;
+
+	pointItem->p = point_boolPrepend(pointItem->p, 0);
+	mirrorItem->p = point_boolPrepend(mirrorItem->p, 1);
+
+	while (pointItem->next != 0) {
+		pointItem = pointItem->next;
+
+	    mirrorItemTemp = points_itemInit(pointItem->p);
+
+	    mirrorItem->next = mirrorItemTemp;
+	    
+		pointItem->p = point_boolPrepend(pointItem->p, 0);
+	    mirrorItemTemp->p = point_boolPrepend(mirrorItemTemp->p, 1);
+	    mirrorItem = mirrorItemTemp;
+	}
+	pointItemLast->next = points_reverse(mirrorItemFirst);
+	return subPoints;
+}
+
+PointItem * points_reverse(PointItem * p) {
+	PointItem * pointItem, * itemPrev = 0, * itemNext;
+	
+	itemNext = p;
+	
+	while(itemNext != 0) {
+		pointItem = itemNext;
+		itemNext = pointItem->next;
+		
+		pointItem->next = itemPrev;
+		itemPrev = pointItem;
+	}
+	
+	return pointItem;
+}

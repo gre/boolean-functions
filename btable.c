@@ -115,3 +115,4 @@ static BoolNode* rec_btable_toBoolTree(TruthTable* table, int i, char* vars) {
 BoolTree* btable_toBoolTree(TruthTable* table, char* vars) {
   return btree_createTreeWith(rec_btable_toBoolTree(table, 0, vars));
 }
+

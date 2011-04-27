@@ -5,6 +5,8 @@
 #include "function.h"
 #include "ftree.h"
 #include "ui.h"
+#include "points.h"
+#include "utils.h"
 
 struct _Function {
   FunctionTree* tree; // function tree not simplified
@@ -34,19 +36,60 @@ void function_printAsTruthTable(Function* f, FILE* out) {
 }
 
 void function_printEvalPoint(Function* f, Point p, FILE* out) {
-  fprintf(out, "%s(%s) = %d\n", f->symbol, sfree = point_toString(p), function_eval(f,p) );
+  fprintf(out, "%s%s = %d\n", f->symbol, sfree = point_toString(p), function_eval(f,p) );
   if (sfree != 0) free(sfree);
 }
 
 void function_printAsBDD(Function* f, FILE* out) {
-  btree_printDot(f->btree, out);
+  btree_printDot(f->btree, out); 
 }
 void function_printAsTree(Function* f, FILE* out) {
   ftree_printDot(f->fmd, out);
 }
 
 void function_printAsKarnaugh(Function* f, FILE* out) {
-	//fprintf(out, "%s = %s\n", f->symbol, btable_toStringKarnaugh(f->table,f->vars));
+	int rows, cols;
+	char * rowsVars, * colsVars;
+	Points * colsP, * rowsP;
+	PointItem * rowPointItem, * colPointItem;
+	rows = function_varsLength(f) / 2;
+	cols = function_varsLength(f) - rows;
+	
+	rowsVars = calloc(rows+1, sizeof(char));
+	colsVars = calloc(cols+1, sizeof(char));
+	
+	// Variable names
+	memcpy(colsVars, f->vars, cols);
+	colsVars[cols] = '\0';
+	memcpy(rowsVars, &(f->vars[cols]), rows);
+	rowsVars[cols] = '\0';
+	
+	colsP = points_grayCode(cols);
+	rowsP = points_grayCode(rows);
+	// Column
+	fprintf(out, "%-*s%s\n", cols+2, colsVars,
+		str_strips(points_toString(colsP),"(),") );
+	// Rows
+	fprintf(out, "%s\n", rowsVars);
+	
+	// Rows line by line
+	rowPointItem = rowsP->point;
+	do {
+		// Row value
+		fprintf(out, "%-*s", cols+2, str_strips(point_toString(rowPointItem->p),"(),") );
+		
+		// Columns
+		colPointItem = colsP->point;
+		do {
+			fprintf(out, "%-*d ", cols, function_eval(f, point_concat(colPointItem->p, rowPointItem->p) ) );
+			
+			colPointItem = colPointItem->next;
+		} while (colPointItem != 0);
+		
+		fprintf(out, "\n");
+		
+		rowPointItem = rowPointItem->next;
+	} while(rowPointItem != 0);
 }
 
 static Function* function_init() {

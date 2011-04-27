@@ -18,6 +18,14 @@ Point point_dup(Point src) {
 	return p;
 }
 
+Point point_concat(Point first, Point second) {
+	Point res;
+	res = point_init(first.dim+second.dim);
+	memcpy(res.vect, first.vect, first.dim);
+	memcpy(&(res.vect[first.dim]), second.vect, second.dim);
+	return res;
+}
+
 void point_free(Point p) {
 	free(p.vect);
 }
@@ -68,4 +76,14 @@ char* point_toString(Point p) {
   out[c++] = ')';
   out[c] = '\0';
   return out;
+}
+
+Point point_boolPrepend(Point p, Bool newBool) {
+	Bool* retBools = calloc(p.dim+1, sizeof(Bool));
+	memcpy(&retBools[1], p.vect, p.dim);
+	retBools[0] = newBool;
+	
+	p.vect = retBools;
+	p.dim++;
+	return p;
 }
