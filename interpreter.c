@@ -300,11 +300,31 @@ extern void interp_runCommand(Env* env, TPA_Instruction* inst) {
 						pointItem = pointItem->next;
 					} while (pointItem != 0);
 					break;
-			
-	 /* case PA_IK_EvalPoint:
-				fprintf(stderr,"  eval fct=%s point=%p\n",
-					inst.u.evalpoint.name,
-					inst.u.evalpoint.vals);*/
+				
+				f = interp_getFunctionByName(env, inst->u.evalens.name);
+				if (f == 0) {
+					fprintf(stderr,"Fonction inconnue\n");
+				  	break;
+				}
+				
+				if (points_pointDim(points) != function_varsLength(f)) {
+					fprintf(stderr,"Point vector dim and function vars number mismatch.\n");
+				  	break;					
+				}
+								
+				do {
+					function_printEvalPoint(f,pointItem->p,out);					
+					pointItem = pointItem->next;
+				} while (pointItem != 0);
+
+                break;
+	    case PA_IK_EvalPoint:
+	  		function_printEvalPoint(
+	  			interp_getFunctionByName(env, inst->u.evalpoint.name),
+	  			TPAExpr_toPoint(inst->u.evalpoint.vals),out
+	  		);
+        	break;
+				
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;

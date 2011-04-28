@@ -18,7 +18,29 @@ void showHelp(char* argv0) {
   printf("Print funct as logic expression.\n");
   printf("\tprint funct /e [fichier]\n");
   printf("\n");
-// TODO ...
+  printf("Print the truth table for the function funct.\n");
+  printf("\tprint funct /t [fichier]\n");
+  printf("\n");
+  printf("The function funct in dot format.\n");
+  printf("\tprint funct /a [fichier]\n");
+  printf("\n");
+  printf("The bdd of the function funct in dot format.\n");
+  printf("\tprint funct /b [fichier]\n");
+  printf("\n");
+  printf("The karnaugh table for function funct.\n");
+  printf("\tprint funct /k [fichier]\n");
+  printf("\n\n");
+  printf("Operations on points:\n");
+  printf("\tCreate: point pid = (*0)\n");
+  printf("\tAdd: point pid += (01)\n");
+  printf("\tDelete: point pid -= (01)\n");
+  printf("\n\n");
+  printf("Evaluate a function with a set of points.\n");
+  printf("\teval funct pid\n");  
+  printf("\n");
+  printf("Evaluate a function with a point (01).\n");
+  printf("\teval funct (01)\n");
+  printf("\n");
 }
 
 int main(int argc, char* argv[]) {
