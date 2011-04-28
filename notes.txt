@@ -1,0 +1,5 @@
+- Le script test.sh contient une batterie de test avec except
+- Par convention, l'ordre des paramètres des fonctions est l'ordre alphabétique des symboles de variable
+
+{fonctionnalités en bonus}
+- L'imbrication de fonctions ne fonctionne que avec des valeurs (pas de substitution de variables)
