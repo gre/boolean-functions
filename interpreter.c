@@ -243,15 +243,13 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 					pointItem = pointItem->next;
 				} while (pointItem != 0);
 
-				//function_eval();
-                /*fprintf(stderr,"  eval fct=%s ens=%s\n",
-                    inst.u.evalens.name,
-                    inst.u.evalens.ens);*/
                 break;
-	 /* case PA_IK_EvalPoint:
-				fprintf(stderr,"  eval fct=%s point=%p\n",
-					inst.u.evalpoint.name,
-					inst.u.evalpoint.vals);*/
+	    case PA_IK_EvalPoint:
+	  		function_printEvalPoint(
+	  			interp_getFunctionByName(env, inst->u.evalpoint.name),
+	  			TPAExpr_toPoint(inst->u.evalpoint.vals),out
+	  		);
+        	break;
         default:
             fprintf(stderr," Instruction inconnue\n");
             break;
