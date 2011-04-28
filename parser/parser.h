@@ -1,5 +1,3 @@
-#ifndef _PARSER_H
-#define _PARSER_H
 
 /*******************************************************************/
 /* Le parser construit des expressions logique (instruction expr). */
@@ -52,8 +50,8 @@ typedef enum _TPA_PrintFormat {
     PA_PF_bdd,
     PA_PF_table,
     PA_PF_disjonctive,
-    PA_PF_karnaugh,
-    PA_PF_tree
+    PA_PF_dot,
+    PA_PF_karnaugh
 } TPA_PrintFormat;
 
 typedef struct _TPA_Instruction {
@@ -101,4 +99,3 @@ typedef struct _TPA_Instruction {
 // renvoie 0 sur fin de fichier.
 int pa_parser(TPA_Instruction* i);
 
-#endif
