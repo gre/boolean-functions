@@ -1,6 +1,7 @@
 .PHONY: clean
 
-DEBUG = -Wall -g -DDEBUG -DTRACE
+# DEBUG = -Wall -g -DDEBUG -DTRACE
+DEBUG = 
 OPT = ${DEBUG}
 
 all: clean main
