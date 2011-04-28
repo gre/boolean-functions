@@ -134,9 +134,6 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	Points* points;
 	PointItem* pointItem;
 	FILE* out;
-	#ifdef DEBUG
-	//printf("DEBUG: instruction: kind: %d, name: %s, format: %d, ope: %c, ens: %s\n", inst->kind, inst->u.expr.name, inst->u.print.fmt, inst->u.point.ope, inst->u.evalens.ens);
-	#endif
 	out = stdout;
 	switch(inst->kind) {
         case PA_IK_Expr:
@@ -242,12 +239,8 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 					function_printEvalPoint(f,pointItem->p,out);					
 					pointItem = pointItem->next;
 				} while (pointItem != 0);
-
-				//function_eval();
-                /*fprintf(stderr,"  eval fct=%s ens=%s\n",
-                    inst.u.evalens.name,
-                    inst.u.evalens.ens);*/
-                break;
+				break;
+			
 	 /* case PA_IK_EvalPoint:
 				fprintf(stderr,"  eval fct=%s point=%p\n",
 					inst.u.evalpoint.name,
@@ -272,9 +265,6 @@ extern TPA_Expr* pa_newBool(int b) {
     TPA_Expr* t = tpa_init();
     t -> val = b;
     t -> type = TPA_VALUE;
-    #ifdef TRACE
-    printf("newBool val: %d type:TPA_VALUE \n", b);
-    #endif
     return t;
 }
 
