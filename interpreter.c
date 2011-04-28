@@ -307,7 +307,7 @@ extern void interp_runCommand(Env* env, TPA_Instruction* inst) {
 				  	break;
 				}
 				
-				if (points_pointDim(points) != function_varsLength(f)) {
+				if (points_getDim(points) != function_getVarsLength(f)) {
 					fprintf(stderr,"Point vector dim and function vars number mismatch.\n");
 				  	break;					
 				}
