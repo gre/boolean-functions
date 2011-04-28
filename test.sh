@@ -27,6 +27,12 @@ send "table funct = (11110010)\r"
 send "print /d funct\r"
 expect "funct(abc) = (!a+(!c*(b*a)))"
 
+send "print /k funct\r"
+expect "ab  00 01 11 10"
+
+send "print /b funct\r"
+expect "label"
+
 # test function imbrication
 send "expr xor = a*!b+!a*b\r"
 send "expr ff = xor(01)\r"
@@ -39,8 +45,18 @@ expect "ff'(a) = a"
 
 send "expr fun = a*b+c\r"
 send "point ident = (***)\r"
-send "eval fun ident"
-expect "fun((0,1,1)) = 1"
+send "eval fun ident\r"
+expect "fun(0,1,1) = 1"
+
+send "eval fun (111)\r"
+expect "fun(1,1,1) = 1"
+
+send "point ident = (111)\r"
+expect "(1,1,1)"
+send "point ident += (110)\r"
+expect "(1,1,1), (1,1,0)"
+send "point ident -= (111)\r"
+expect "(1,1,0)"
 
 interact
 
