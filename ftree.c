@@ -34,6 +34,16 @@ FunctionTree* ftree_createWithNode(FunctionNode* node) {
     return tree;
 }
 
+static void fnode_free(FunctionNode* n) {
+  if(n==0) return;
+  fnode_free(n->left);
+  fnode_free(n->right);
+  free(n);
+}
+extern void ftree_free(FunctionTree* tree) {
+  fnode_free(tree->root);
+}
+
 FunctionNode* ftree_newVar(char s) {
     FunctionNode* node = malloc(sizeof(*node));
     node -> type = NodeType_VARIABLE;

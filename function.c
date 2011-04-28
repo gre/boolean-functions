@@ -17,43 +17,43 @@ struct _Function {
   char* vars; // variables letters in alphabetic order (ex: "abcez")
 };
 
-int function_varsLength(Function* f) {
-	return strlen(f->vars);
-}
 
-char * sfree;
-void function_print(Function *f, FILE* out) {
+extern void function_print(Function *f, FILE* out) {
+  char * sfree;
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->tree));
   if (sfree != 0) free(sfree);
 }
-void function_printAsDNF(Function *f, FILE* out) {
+extern void function_printAsDNF(Function *f, FILE* out) {
+  char * sfree;
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = ftree_toString(f->fmd));
   if (sfree != 0) free(sfree);
 }
-void function_printAsTruthTable(Function* f, FILE* out) {
+extern void function_printAsTruthTable(Function* f, FILE* out) {
+  char * sfree;
   fprintf(out, "%s(%s) = %s\n", f->symbol, f->vars, sfree = btable_toString(f->table));
   if (sfree != 0) free(sfree);
 }
 
-void function_printEvalPoint(Function* f, Point p, FILE* out) {
+extern void function_printEvalPoint(Function* f, Point p, FILE* out) {
+  char * sfree;
   fprintf(out, "%s%s = %d\n", f->symbol, sfree = point_toString(p), function_eval(f,p) );
   if (sfree != 0) free(sfree);
 }
 
-void function_printAsBDD(Function* f, FILE* out) {
+extern void function_printAsBDD(Function* f, FILE* out) {
   btree_printDot(f->btree, out); 
 }
-void function_printAsTree(Function* f, FILE* out) {
+extern void function_printAsTree(Function* f, FILE* out) {
   ftree_printDot(f->fmd, out);
 }
 
-void function_printAsKarnaugh(Function* f, FILE* out) {
+extern void function_printAsKarnaugh(Function* f, FILE* out) {
 	int rows, cols;
 	char * rowsVars, * colsVars;
 	Points * colsP, * rowsP;
 	PointItem * rowPointItem, * colPointItem;
-	rows = function_varsLength(f) / 2;
-	cols = function_varsLength(f) - rows;
+	rows = function_getVarsLength(f) / 2;
+	cols = function_getVarsLength(f) - rows;
 	
 	rowsVars = calloc(rows+1, sizeof(char));
 	colsVars = calloc(cols+1, sizeof(char));
@@ -103,13 +103,22 @@ static Function* function_init() {
   return f;
 }
 
-void function_setName(Function* f, char* name) {
+extern void function_free(Function* f) {
+  if(f->tree != 0) ftree_free(f->tree);
+  if(f->fmd != 0) ftree_free(f->fmd);
+  if(f->btree != 0) btree_free(f->btree);
+  if(f->table != 0) btable_free(f->table);
+  if(f->symbol != 0) free(f->symbol);
+  if(f->vars != 0) free(f->vars);
+}
+
+extern void function_setName(Function* f, char* name) {
   if(f->symbol) free(f->symbol);
   f -> symbol = malloc((1+strlen(name))*sizeof(char));
   strcpy(f->symbol, name);
 }
 
-Function* function_createWithFunctionTree(FunctionTree* tree) {
+extern Function* function_createWithFunctionTree(FunctionTree* tree) {
   Function* f = function_init();
   f -> tree = tree; // Init tree with the given expr without simplifications
   f -> vars = ftree_getVars(tree);
@@ -119,7 +128,7 @@ Function* function_createWithFunctionTree(FunctionTree* tree) {
   return f;
 }
 
-Function* function_createWithTruthTable(TruthTable* table) {
+extern Function* function_createWithTruthTable(TruthTable* table) {
   Function* f = function_init();
   f -> table = table;
   f -> vars = btable_generateVars(table);
@@ -129,10 +138,13 @@ Function* function_createWithTruthTable(TruthTable* table) {
   return f;
 }
 
-Bool function_eval(Function* f, Point p) {
+extern Bool function_eval(Function* f, Point p) {
   return btable_getVal(f->table, point_toIndex(p));
 }
 
-int function_is(Function* f, char* name) {
+extern int function_is(Function* f, char* name) {
   return strcmp(f->symbol, name)==0;
+}
+extern int function_getVarsLength(Function* f) {
+	return strlen(f->vars);
 }

@@ -1,6 +1,6 @@
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "point.h"
 #include "interpreter.h"
 #include "function.h"
@@ -42,7 +42,7 @@ struct _TPA_Expr {
     Point point;
 };
 
-Env* interp_init() {
+extern Env* interp_init() {
   Env* env = malloc(sizeof(*env));
   env -> nbfunction = 0;
   env -> nbpoints = 0;
@@ -52,7 +52,12 @@ Env* interp_init() {
 	env -> points = malloc(sizeof(*(env->points))*POINTS_ALLOC_SIZE);
   return env;
 }
-void interp_free(Env* env) {
+extern void interp_free(Env* env) {
+	int i;
+	for(i=0; i<env->nbfunction; ++i)
+		function_free(env->functions[i]);
+	for(i=0; i<env->nbpoints; ++i)
+		points_free(env->points[i]);
 	free(env->functions);
 	free(env->points);
   free(env);
@@ -90,7 +95,7 @@ static void addPoints(Env* env, char* name, Points* p) {
 }
 
 
-Function* interp_getFunctionByName(Env* env, char* name) {
+static Function* interp_getFunctionByName(Env* env, char* name) {
   int i;
   for(i=0; i<env->nbfunction; ++i)
     if(function_is(env->functions[i], name))
@@ -98,7 +103,7 @@ Function* interp_getFunctionByName(Env* env, char* name) {
   return 0;
 }
 
-Points* interp_getPointsByName(Env* env, char* name) {
+static Points* interp_getPointsByName(Env* env, char* name) {
   int i;
   for(i=0; i<env->nbpoints; ++i)
     if(points_is(env->points[i], name))
@@ -149,14 +154,47 @@ static Point TPAExpr_toPoint(TPA_Expr** expr) {
     return point_create(vals, size);
 }
 
+/**
+* Handle operation on a point
+* @param char* name points name
+* @param char ope operateur: '=':= ; '+':+= ; '-':-=
+* @param TPA_Expr** vals
+**/
+static int interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals) {
+    Point point;
+    int i, size = 0;
+    TPA_Expr ** val = vals;
 
-void interp_runCommand(Env* env, TPA_Instruction* inst) {
+    // Calculate the size of our point vector
+    while(*val != 0) {
+        size++;
+        val++;
+    }
+
+    point = point_init(size);
+    for(i=0; i<size; i++)
+        point.vect[i] = (char)(*vals[i]).val; // int that can contain 0,1,-1 (wildcard)
+
+    switch(ope) {
+        case '=':
+            points_free(points);
+            points_wildOp(points, point, '+');
+            break;
+        case '+':
+        case '-':
+						if (!points_fit(points, point)) return 0;
+            points_wildOp(points, point, ope);
+            break;
+    }
+    return 1;
+}
+
+extern void interp_runCommand(Env* env, TPA_Instruction* inst) {
 	char* str;
 	Function* f;
 	Points* points;
 	PointItem* pointItem;
-	FILE* out;
-	out = stdout;
+	FILE* out = stdout;
 	switch(inst->kind) {
         case PA_IK_Expr:
             f = function_createWithFunctionTree(TPAExpr_toFunctionTree(inst->u.expr.expr, env));
@@ -204,7 +242,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 									function_printAsDNF(f, out);
 									break;
 
-								case PA_PF_tree:
+								case PA_PF_dot:
 									function_printAsTree(f, out);
 									break;
 
@@ -252,7 +290,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
 				  	break;
 				}
 				
-				if (points_pointDim(points) != function_varsLength(f)) {
+				if (points_pointDim(points) != function_getVarsLength(f)) {
 					fprintf(stderr,"Point vector dim and function vars number mismatch.\n");
 				  	break;					
 				}
@@ -273,7 +311,7 @@ void interp_runCommand(Env* env, TPA_Instruction* inst) {
     }
 }
 
-TPA_Expr* tpa_init() {
+extern TPA_Expr* tpa_init() {
     TPA_Expr* t = (TPA_Expr*)malloc(sizeof(*t));
     t -> val = 0;
     t -> type = TPA_UNDEF;
@@ -331,41 +369,3 @@ extern TPA_Expr* pa_newWildcard() {
     return t;
 }
 
-/**
-* Handle operation on a point
-* @param char* name points name
-* @param char ope operateur: '=':= ; '+':+= ; '-':-=
-* @param TPA_Expr** vals
-**/
-int interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals) {
-    Point point;
-    int i, size;
-    TPA_Expr ** val;
-
-    val = vals;
-    size = 0;
-
-    // Calculate the size of our point vector
-    while(*val != 0) {
-        size++;
-        val++;
-    }
-
-    point = point_init(size);
-
-    for(i=0; i<size; i++)
-        point.vect[i] = (char)(*vals[i]).val; // int that can contain 0,1,-1 (wildcard)
-
-    switch(ope) {
-        case '=':
-            points_free(points);
-            points_wildOp(points, point, '+');
-            break;
-        case '+':
-        case '-':
-        	if (!points_fit(points, point)) return 0;
-            points_wildOp(points, point, ope);
-            break;
-    }
-    return 1;
-}

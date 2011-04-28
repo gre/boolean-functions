@@ -1,7 +1,7 @@
 #ifndef _FTREE_H
 #define _FTREE_H
 /**
- * A F Tree is a function tree representing the expression 
+ * A F Tree is an arithmetic tree representing the expression 
  * with operators, value and variables
  */
 
@@ -15,16 +15,24 @@ typedef enum {
   NodeType_VALUE, NodeType_VARIABLE, NodeType_OPERATOR
 } NodeType;
 
-typedef enum { // FIXME : don't remember all op required by specs
+typedef enum {
   Op_OR, Op_AND, Op_XOR,
   Op_NOT 
 } Operator;
 
-
+/**
+ * create a function tree with a node as root
+ */
 FunctionTree* ftree_createWithNode(FunctionNode* node);
 
+/**
+ * clone a functiontree
+ */
 FunctionTree* ftree_clone(FunctionTree* node);
 
+/**
+ * free a function tree
+ */
 void ftree_free(FunctionTree*);
 
 void ftree_normalize(FunctionTree*);

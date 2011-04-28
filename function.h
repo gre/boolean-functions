@@ -6,49 +6,64 @@
 #include "btree.h"
 #include "globals.h"
 
+/**
+ * A function contains all representations of a function
+ */
 typedef struct _Function Function;
 
-Function* function_createWithFunctionTree(FunctionTree* tree);
-Function* function_createWithTruthTable(TruthTable* table);
+/**
+ * Create a function with a function tree
+ */
+extern Function* function_createWithFunctionTree(FunctionTree* tree);
+
+/**
+ * Create a function with a truth table
+ */
+extern Function* function_createWithTruthTable(TruthTable* table);
+
+/**
+ * free a function
+ */
+extern void function_free(Function* f);
 
 /**
  * Print as expression :
  * print the DNF
  */
-void function_print(Function *, FILE* out);
+extern void function_print(Function *, FILE* out);
 
 /**
  * Print as Disjunctive Normal Form (DNF)
  */
-void function_printAsDNF(Function*, FILE* out);
+extern void function_printAsDNF(Function*, FILE* out);
 
 /**
  * Print tree in dot format
  */
-void function_printAsTree(Function*, FILE* out); // Must use btree_print
+extern void function_printAsTree(Function*, FILE* out); // Must use btree_print
 
 
-void function_setName(Function* f, char* name);
+extern void function_setName(Function* f, char* name);
 
 /**
  * Print binary decision diagram (BDD) in dot format
  */
-void function_printAsBDD(Function*, FILE* out);
+extern void function_printAsBDD(Function*, FILE* out);
 
-void function_printAsTruthTable(Function*, FILE* out); // Must use btable_toString
+extern void function_printAsTruthTable(Function*, FILE* out); // Must use btable_toString
 
-void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_toStringKarnaugh
+extern void function_printAsKarnaugh(Function*, FILE* out); // Must use btable_toStringKarnaugh
 
-void function_printEvalPoint(Function* f, Point p, FILE* out);
+extern void function_printEvalPoint(Function* f, Point p, FILE* out);
 
-Bool function_eval(Function*, Point); // Must use btable_getPointVal
+extern Bool function_eval(Function*, Point); // Must use btable_getPointVal
 
-int function_is(Function* f, char* name);
+extern int function_is(Function* f, char* name);
 
 // shortcut to btable_equals
-int function_equals(Function*, Function*);
+extern int function_equals(Function*, Function*);
 
-int function_varsLength(Function* f);
+extern int function_getVarsLength(Function* f);
 
 #endif
 

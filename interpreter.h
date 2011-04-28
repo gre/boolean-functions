@@ -1,20 +1,28 @@
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
-#include "function.h"
-#include "points.h"
 #include "globals.h"
 #include "parser/parser.h"
 
+/**
+ * Environement of the interpreter
+ */
 typedef struct _Env Env;
 
-Env* interp_init();
-void interp_free(Env*);
+/**
+ * Init the env
+ */
+extern Env* interp_init();
 
-int interp_containsSymbol(Env*, char*);
+/**
+ * free the env
+ */
+extern void interp_free(Env*);
 
-void interp_runCommand(Env* env, TPA_Instruction* instruction);
-
-int interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals);
+/**
+ * Run a command into the interpreter.
+ * @param instruction : given by the parser
+ */
+extern void interp_runCommand(Env* env, TPA_Instruction* instruction);
 
 #endif
