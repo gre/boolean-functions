@@ -38,7 +38,7 @@ extern char* str_trim(char *s) {
     return newString;
 }
 
-extern char* str_strips(char *s, char *cs) {
+extern char* str_strips(const char *s, const char *cs) {
 	char *r;
 	int i = -1, j = 0;
 	r = calloc(strlen(s)+1, sizeof(char));

@@ -82,7 +82,6 @@ Point point_boolPrepend(Point p, Bool newBool) {
 	Bool* retBools = calloc(p.dim+1, sizeof(Bool));
 	memcpy(&retBools[1], p.vect, p.dim);
 	retBools[0] = newBool;
-	
 	p.vect = retBools;
 	p.dim++;
 	return p;

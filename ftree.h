@@ -4,7 +4,6 @@
  * A F Tree is an arithmetic tree representing the expression 
  * with operators, value and variables
  */
-
 typedef struct _FunctionTree FunctionTree;
 typedef struct _FunctionNode FunctionNode;
 
@@ -23,33 +22,38 @@ typedef enum {
 /**
  * create a function tree with a node as root
  */
-FunctionTree* ftree_createWithNode(FunctionNode* node);
+extern FunctionTree* ftree_createWithNode(FunctionNode* node);
 
 /**
  * clone a functiontree
  */
-FunctionTree* ftree_clone(FunctionTree* node);
+extern FunctionTree* ftree_clone(FunctionTree* node);
 
 /**
  * free a function tree
  */
-void ftree_free(FunctionTree*);
+extern void ftree_free(FunctionTree*);
 
-void ftree_normalize(FunctionTree*);
+/// Converters
+extern TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars);
+extern char* ftree_toString(FunctionTree*);
 
-TruthTable* ftree_toTruthTable(FunctionTree* ftree, char* vars);
+/// Printer
+extern void ftree_printDot(FunctionTree* ftree, FILE* out);
 
-void ftree_printDot(FunctionTree* ftree, FILE* out);
+/**
+ * get all vars used in the ftree
+ */
+extern char* ftree_getVars(FunctionTree* ftree);
 
-char * ftree_toString(FunctionTree*);
-
-char* ftree_getVars(FunctionTree* ftree);
-
-FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r);
-FunctionNode* ftree_newNot(FunctionNode* node);
-FunctionNode* ftree_newBool(int b);
-FunctionNode* ftree_newVar(char s);
-FunctionTree* ftree_createWithNode(FunctionNode* node);
+/**
+ * create nodes
+ */
+extern FunctionNode* ftree_newBin(FunctionNode* l, char o, FunctionNode* r);
+extern FunctionNode* ftree_newNot(FunctionNode* node);
+extern FunctionNode* ftree_newBool(int b);
+extern FunctionNode* ftree_newVar(char s);
+extern FunctionTree* ftree_createWithNode(FunctionNode* node);
 
 #endif
 

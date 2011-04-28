@@ -267,39 +267,39 @@ extern void interp_runCommand(Env* env, TPA_Instruction* inst) {
                     addPoints(env, inst->u.expr.name, points);
                 }
                 if (interp_pointsOperation(points,inst->u.point.name,inst->u.point.ope,inst->u.point.vals) == 0)
-                	fprintf(stderr, "La taille de point est incompatible avec l'ensamble\n");
+                	fprintf(stderr, "La taille de point est incompatible avec l'ensemble\n");
 				else 
 	                points_print(points, out);
                 break;
         case PA_IK_EvalEns:
-        		
-                points = interp_getPointsByName(env,inst->u.evalens.ens);
-                if (points == 0) {
-                	fprintf(stderr, "Ensamble des points inconnue\n");
-                	break;
-				}
-				pointItem = points->point;
-				if (pointItem == 0) {
-					fprintf(stderr, "L'ensamble des points est vide\n");
+					
+					points = interp_getPointsByName(env,inst->u.evalens.ens);
+          if (points == 0) {
+						fprintf(stderr, "Ensemble des points inconnue\n");
+            break;
+					}
+					pointItem = points->point;
+					if (pointItem == 0) {
+						fprintf(stderr, "L'ensemble des points est vide\n");
+						break;
+					}
+					
+					f = interp_getFunctionByName(env, inst->u.evalens.name);
+					if (f == 0) {
+						fprintf(stderr,"Fonction inconnue\n");
+							break;
+					}
+					
+					if (points_getDim(points) != function_getVarsLength(f)) {
+						fprintf(stderr,"Dimension des points et de la fonction incompatible.\n");
+							break;					
+					}
+					
+					do {
+						function_printEvalPoint(f,pointItem->p,out);					
+						pointItem = pointItem->next;
+					} while (pointItem != 0);
 					break;
-				}
-				
-				f = interp_getFunctionByName(env, inst->u.evalens.name);
-				if (f == 0) {
-					fprintf(stderr,"Fonction inconnue\n");
-				  	break;
-				}
-				
-				if (points_pointDim(points) != function_getVarsLength(f)) {
-					fprintf(stderr,"Point vector dim and function vars number mismatch.\n");
-				  	break;					
-				}
-								
-				do {
-					function_printEvalPoint(f,pointItem->p,out);					
-					pointItem = pointItem->next;
-				} while (pointItem != 0);
-				break;
 			
 	 /* case PA_IK_EvalPoint:
 				fprintf(stderr,"  eval fct=%s point=%p\n",
