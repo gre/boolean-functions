@@ -12,15 +12,17 @@
 #include "points.h"
 #include "parser/parser.h"
 
+#define FUNCTION_ALLOC_SIZE 50
+#define POINTS_ALLOC_SIZE 50
+
 struct _Env {
-  // ...
-
-  // Symbols
-  Function* functions[100]; // TODO dynamic
+  Function** functions;
   int nbfunction;
+	int functionAlloc;
 
-  Points* points[100]; // TODO dynamic
+  Points** points;
   int nbpoints;
+	int pointsAlloc;
 };
 
 typedef enum { TPA_UNDEF=0, TPA_VALUE, TPA_VARIABLE, TPA_OPERATOR, TPA_CALL } TPA_Type;
@@ -44,12 +46,21 @@ Env* interp_init() {
   Env* env = malloc(sizeof(*env));
   env -> nbfunction = 0;
   env -> nbpoints = 0;
+	env -> functionAlloc = FUNCTION_ALLOC_SIZE;
+	env -> pointsAlloc = POINTS_ALLOC_SIZE;
+	env -> functions = malloc(sizeof(*(env->functions))*FUNCTION_ALLOC_SIZE);
+	env -> points = malloc(sizeof(*(env->points))*POINTS_ALLOC_SIZE);
   return env;
 }
 void interp_free(Env* env) {
+	free(env->functions);
+	free(env->points);
   free(env);
 }
 
+/**
+ * Add a function and override if exists
+ */
 static void addFunction(Env* env, char* name, Function* f) {
     function_setName(f, name);
 		int i;
@@ -59,11 +70,22 @@ static void addFunction(Env* env, char* name, Function* f) {
 				return;
 			}
 		}
+		if(env->nbfunction >= env->functionAlloc) {
+			env -> functionAlloc += FUNCTION_ALLOC_SIZE;
+			env -> functions = realloc(env->functions, sizeof(*(env->functions))*env->functionAlloc);
+		}
     env -> functions[env -> nbfunction ++] = f;
 }
 
+/**
+ * Add a points
+ */
 static void addPoints(Env* env, char* name, Points* p) {
     points_setName(p, name);
+		if(env->nbpoints >= env->pointsAlloc) {
+			env -> pointsAlloc += POINTS_ALLOC_SIZE;
+			env -> points = realloc(env->points, sizeof(*(env->points))*env->pointsAlloc);
+		}
     env->points[env->nbpoints++] = p;
 }
 
@@ -340,9 +362,6 @@ int interp_pointsOperation(Points* points, char* name, char ope, TPA_Expr** vals
             points_wildOp(points, point, '+');
             break;
         case '+':
-        	if (!points_fit(points, point)) return 0;
-            points_wildOp(points, point, ope);
-            break;
         case '-':
         	if (!points_fit(points, point)) return 0;
             points_wildOp(points, point, ope);
